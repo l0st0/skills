@@ -1,8 +1,8 @@
 # skills
 
-Agent skills for the third axis of review: walking a change through the running app in a browser, across every persona, and reporting what it actually does.
+Agent skills for the third axis of review: walking a change through the running app in a browser.
 
-A code review reads the diff against standards and spec. These walk the built thing.
+A code review reads the diff against standards and spec.
 
 ## Skills
 
@@ -27,8 +27,6 @@ Claude Code, as a plugin:
 /plugin marketplace add l0st0/skills
 /plugin install verify-in-browser@l0st0-skills
 ```
-
-Pick one route, not both. The plugin is a read-only bundle you subscribe to; the skills CLI writes files you own and edit. Installing both leaves you with each skill twice.
 
 ## Requirements
 
