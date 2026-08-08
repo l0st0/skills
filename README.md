@@ -2,7 +2,7 @@
 
 Agent skills for the third axis of review: walking a change through the running app in a browser.
 
-A code review reads the diff against standards and spec.
+A code review reads the diff against standards and spec, but also you can specify - branch changes, PR or even full application smoke.
 
 ## Skills
 
