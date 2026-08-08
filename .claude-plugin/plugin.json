@@ -1,0 +1,10 @@
+{
+  "name": "verify-in-browser",
+  "description": "Walk a change through the running app across every persona, and the per-project setup file that walk runs on",
+  "version": "1.0.0",
+  "author": {
+    "name": "l0st0"
+  },
+  "repository": "https://github.com/l0st0/skills",
+  "license": "MIT"
+}
