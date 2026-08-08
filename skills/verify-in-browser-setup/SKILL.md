@@ -1,13 +1,15 @@
 ---
 name: verify-in-browser-setup
-description: Build or repair the per-project setup file a browser walk runs on — driver, serve command and base URL, seed command, and one signed-in login per persona. Use when that file is missing or incomplete, when a walk's driver or credentials stopped working, or when a project gains a persona.
+description: Build or repair the per-project setup file a browser walk runs on. Use when that file is missing or incomplete, when a walk's driver or credentials stopped working, or when a project gains a persona.
 ---
 
 # Verify in browser — setup
 
-Once per project. `verify-in-browser` walks a change through the running app; this writes the file that walk runs on, and the walk is only as good as this file is true.
+`verify-in-browser` walks a change through the running app; this writes the file that walk runs on, and the walk is only as good as this file is true.
 
 The file names what the environment cannot say for itself, and nothing more. Scripts, compose files and `.env.example` are already a source of truth — restating them here only gives them somewhere to go stale.
+
+A repair run re-enters at the step that broke — a dead driver at step 2, a new gap at step 3, a failed credential or a new persona at step 4 — and rewrites only the sections it touched. Every step's done-criterion still binds.
 
 ## 1. Read the environment
 
@@ -31,7 +33,9 @@ Where a step needs a human — provisioning an account, an SSO tenant, a secret 
 
 Done when every question is asked once and answered, or recorded as a gap the user owns.
 
-## 4. Sign in as every persona
+## 4. Seed, then sign in as every persona
+
+Run the seed command first: the seeded users are usually the very personas about to sign in, and a broken seed found here costs this run, not every walk.
 
 Drive the browser to the sign-in screen and sign in as each credential, one at a time. An unverified login burns a whole walk on a login screen.
 
@@ -43,7 +47,7 @@ Done when every row in the persona table signed in during this run.
 
 ## 5. Write it, and point at it
 
-Write the file where the project keeps its agent docs, and add the pointer to `CLAUDE.md` or `AGENTS.md` so the next walk finds it. Absent a convention, `.claude/verify-in-browser.md`.
+Write the file where the project keeps its agent docs; absent that convention, `.claude/verify-in-browser.md`. Add the pointer to `CLAUDE.md` or `AGENTS.md` so the next walk finds it.
 
 Sections, in this order:
 
