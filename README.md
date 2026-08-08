@@ -28,6 +28,8 @@ Claude Code, as a plugin:
 /plugin install verify-in-browser@l0st0-skills
 ```
 
+Pick one route, not both. The plugin is a read-only bundle you subscribe to; the skills CLI writes files you own and edit. Installing both leaves you with each skill twice.
+
 ## Requirements
 
 The walk needs a way to drive a browser — a browser-automation skill, a browser MCP server, or the project's own end-to-end harness run headed. `verify-in-browser-setup` will tell you if the session has none.

@@ -48,13 +48,13 @@ Missing, or short of what your cases need, run `verify-in-browser-setup` and com
 
 ## 3. Walk them
 
-You dispatch and aggregate; the subagents walk. One per axis point or persona, all in a single message so they run concurrently, each given the setup file verbatim, the driver to use, and its own cases — and nothing about the report, so a walker's only way to finish is to walk every case it holds.
+You dispatch and aggregate; the sub-agents walk. One per axis point or persona, spawned in parallel, each given the setup file verbatim, the driver to use, and its own cases — and nothing about the report, so a walker's only way to finish is to walk every case it holds.
 
 Concurrent walkers share a browser and a database, so give each one its own **lane** before dispatching: a distinct driver session, and — for any walker that writes — its own records to write to. A lane is concrete. Walker A creates and edits listings prefixed `qa-a-`, walker B `qa-b-`, and neither touches the seeded row the other is reading. Walkers that collide return plausible wrong answers rather than errors, which is the one failure this whole skill exists to catch.
 
 Some state has no lane to split into — a singleton settings page, a global feature toggle, an account-wide preference. Hand every case that writes it to one walker, which runs them in sequence.
 
-The browser transcript stays in the subagent. Per case it returns one of:
+The browser transcript stays in the sub-agent. Per case it returns one of:
 
 - **pass**
 - **observed X, expected Y**, with the steps that produced it
