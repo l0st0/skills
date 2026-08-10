@@ -41,7 +41,7 @@ Done when every case carries a persona, an entry point, steps, and an expected r
 
 Read the project's verify-in-browser setup file. `CLAUDE.md` or `AGENTS.md` names where the project keeps its agent docs; absent that convention, `.claude/verify-in-browser.md`.
 
-Present and complete — a driver available in this session, a serve command and base URL, and one login per persona your cases need — go to step 3.
+Present and complete — a driver available in this session, a serve command and base URL, one login per persona your cases need, and where fixture scripts live when a case needs data the seed does not hold — go to step 3.
 
 Missing, or short of what your cases need, run `verify-in-browser-setup` and come back here with the file it writes.
 
@@ -50,6 +50,8 @@ Missing, or short of what your cases need, run `verify-in-browser-setup` and com
 You dispatch and aggregate; the sub-agents walk. One per axis point or persona, spawned in parallel, each given the setup file verbatim, the driver to use, and its own cases — and nothing about the report, so a walker's only way to finish is to walk every case it holds.
 
 Concurrent walkers share a browser and a database, so give each one its own **lane** before dispatching: a distinct driver session, and — for any walker that writes — its own records to write to. A lane is concrete. Walker A creates and edits listings prefixed `qa-a-`, walker B `qa-b-`, and neither touches the seeded row the other is reading. Walkers that collide return plausible wrong answers rather than errors, which is the one failure this whole skill exists to catch.
+
+A case needing data the seed does not hold gets a **fixture**, written and torn down under the rules the setup file names: created before the walker opens a browser, removed after — including when the walk fails. Data created inline instead leaves rows that poison the next walk, and a case that mutates a seeded row in place cannot be re-run.
 
 Some state has no lane to split into — a singleton settings page, a global feature toggle, an account-wide preference. Hand every case that writes it to one walker, which runs them in sequence.
 
@@ -76,7 +78,9 @@ Clean run: one line. `N cases across <axis>, all pass.` Nothing more — a gate 
 Otherwise split what came back, and let the user decide what happens to each:
 
 - **In scope** — the change under test is wrong. Observed versus expected, in context, with the steps. Report it and stop; fix on the user's go-ahead.
-- **Out of scope** — real, but not this change. Observed behaviour and reproduction steps only: no file paths, no diagnosis, no proposed fix, because guessing at the cause biases whoever picks it up. Where the project has an issues directory, one file per finding, marked for triage; otherwise inline.
+- **Out of scope** — real, but not this change. Observed behaviour and reproduction steps only, because guessing at the cause biases whoever picks it up. Where the project has an issues directory, one file per finding, marked for triage; otherwise inline.
 - **Unsure** — it looked odd and the case says nothing about it. One line each. Smoke runs have no Unsure: an observation either clears the obviously-broken bar and is out of scope, or it is not a finding.
 
 A finding that broke something previously working earns a committed regression test, so the next run does not rediscover it by hand. Say which one.
+
+Done when every finding sits in exactly one of the three buckets, and every regression among them is named.
