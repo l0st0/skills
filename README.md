@@ -25,7 +25,7 @@ Claude Code, as a plugin:
 
 ```
 /plugin marketplace add l0st0/skills
-/plugin install verify-in-browser@l0st0-skills
+/plugin install l0st0-skills@l0st0
 ```
 
 ## Requirements

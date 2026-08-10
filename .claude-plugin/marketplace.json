@@ -1,5 +1,5 @@
 {
-  "name": "l0st0-skills",
+  "name": "l0st0",
   "owner": {
     "name": "l0st0"
   },
@@ -9,7 +9,7 @@
   },
   "plugins": [
     {
-      "name": "verify-in-browser",
+      "name": "l0st0-skills",
       "source": ".",
       "description": "Walk a change through the running app across every persona, and the per-project setup file that walk runs on",
       "version": "1.0.0",
