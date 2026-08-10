@@ -2,14 +2,14 @@
 
 Agent skills for the third axis of review: walking a change through the running app in a browser.
 
-A code review reads the diff against standards and spec, but also you can specify - branch changes, PR or even full application smoke.
+A code review reads the diff against standards and spec. This runs against branch changes, a PR, or a full application smoke.
 
 ## Skills
 
 | Skill | What it does |
 | --- | --- |
 | [`verify-in-browser`](skills/verify-in-browser/SKILL.md) | Derives cases from the spec or diff, dispatches one walker per persona with its own write lane, and reports pass / observed-vs-expected / unreached. |
-| [`verify-in-browser-setup`](skills/verify-in-browser-setup/SKILL.md) | Builds or repairs the per-project file the walk runs on — driver, serve command and base URL, seed command, and one signed-in login per persona. |
+| [`verify-in-browser-setup`](skills/verify-in-browser-setup/SKILL.md) | Builds or repairs the per-project file the walk runs on — driver, serve command and base URL, seed command, where per-walk fixtures live, and one signed-in login per persona. |
 
 `verify-in-browser` calls `verify-in-browser-setup` when the setup file is missing, so install both.
 
