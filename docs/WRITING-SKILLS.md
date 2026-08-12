@@ -2,7 +2,7 @@
 
 Read this before editing any `skills/*/SKILL.md`.
 
-Both skills are written against the `mattpocock-skills:writing-for-agents` standard — invoke that skill first; it carries the general rules. What follows is only what this repo commits to on top of them.
+Every skill here is written against the `mattpocock-skills:writing-for-agents` standard — invoke that skill first; it carries the general rules. What follows is only what this repo commits to on top of them.
 
 ## What the existing prose commits to
 
