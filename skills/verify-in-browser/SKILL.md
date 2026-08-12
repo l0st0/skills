@@ -26,7 +26,7 @@ When the change is in a read path, the store underneath it is an oracle too, and
 
 Name the **axis** — the dimension along which behaviour is meant to differ — and list the screens the change touches. The scenario set is axis × screens, and every point on the axis appears in at least one case.
 
-Smoke is a mode, not a rung: the user asks for it and names the surface, and the ladder is skipped — the cases are the named surface, per persona. It has no per-case expected, so it runs against the **obviously-broken bar** instead: console errors, failed requests, 404s and 500s, blank regions where content should render, stuck loading states, unhandled errors, dead links, controls that render but do not respond.
+Smoke is a mode, not a rung: the user asks for it and names the surface, and the ladder is skipped — the cases are the named surface, per persona. It has no per-case expected, so it runs against the **obviously-broken bar** instead: console errors, failed requests, 404s and 500s, blank regions where content should render, stuck loading states, unhandled errors, dead links, controls that render but do not respond. The bar is binary — an observation clears it and is a finding, or it is not one — so a smoke walk reports no Unsure.
 
 ### Bound the set
 
@@ -41,35 +41,21 @@ Done when every case carries a persona, an entry point, steps, and an expected r
 
 Read the project's verify-in-browser setup file. `CLAUDE.md` or `AGENTS.md` names where the project keeps its agent docs; absent that convention, `.claude/verify-in-browser.md`.
 
-Present and complete — a driver available in this session, a serve command and base URL, one login per persona your cases need, and where fixture scripts live when a case needs data the seed does not hold — go to step 3.
+Present and answering everything your cases need — a driver this session can invoke, how to serve, who signs in, where fixtures live — go to step 3. The setup skill owns what a complete file contains; do not re-derive its schema here.
 
 Missing, or short of what your cases need, run `verify-in-browser-setup` and come back here with the file it writes.
 
 ## 3. Walk them
 
-You dispatch and aggregate; the sub-agents walk. One per axis point or persona, spawned in parallel, each given the setup file verbatim, the driver to use, and its own cases — and nothing about the report, so a walker's only way to finish is to walk every case it holds.
+You dispatch and aggregate; the sub-agents walk. One per axis point or persona, spawned in parallel, each handed exactly three things: the setup file verbatim, [WALKER.md](WALKER.md) verbatim, and its own cases. Nothing else — the report never enters a walker's context, so its only way to finish is to walk every case it holds. WALKER.md carries the walker's whole contract: lane discipline, fixture rules, the three verdicts, blocker handling. Do not restate it in the dispatch prompt.
 
-Concurrent walkers share a browser and a database, so give each one its own **lane** before dispatching: a distinct driver session, and — for any walker that writes — its own records to write to. A lane is concrete. Walker A creates and edits listings prefixed `qa-a-`, walker B `qa-b-`, and neither touches the seeded row the other is reading. Walkers that collide return plausible wrong answers rather than errors, which is the one failure this whole skill exists to catch.
-
-A case needing data the seed does not hold gets a **fixture**, written and torn down under the rules the setup file names: created before the walker opens a browser, removed after — including when the walk fails. Data created inline instead leaves rows that poison the next walk, and a case that mutates a seeded row in place cannot be re-run.
+Concurrent walkers share a browser and a database, so give each one its own **lane** before dispatching: a distinct driver session, and — for any walker that writes — its own records to write to. A lane is concrete. Walker A creates and edits listings prefixed `qa-a-`, walker B `qa-b-`, and neither touches the seeded row the other is reading.
 
 Some state has no lane to split into — a singleton settings page, a global feature toggle, an account-wide preference. Hand every case that writes it to one walker, which runs them in sequence.
 
-A session with nothing to dispatch to has one walker: you. Take the lanes in sequence, and walk every case to a verdict before writing a word of the report — the same separation the dispatch would have bought, kept as well as a single context can keep it.
+A session with nothing to dispatch to has one walker: you. Follow WALKER.md yourself, lane by lane, every case to a verdict before writing a word of the report — the same separation the dispatch would have bought, kept as well as a single context can keep it.
 
-The browser transcript stays in the sub-agent. Per case it returns one of:
-
-- **pass**
-- **observed X, expected Y**, with the steps that produced it
-- **unreached**, with what blocked it
-
-A case the walk could not reach is unreached, never pass.
-
-When something blocks the walk, the test is whether the fix unblocks it — a broken seed command, a stale dev-server flag, a fixture that no longer loads. Fix those and carry on. The behaviour under test stays untouched: fixing it inside the walk destroys the oracle one step later than reading the implementation would. A blocker in the change itself, and any blocker that resists an obvious fix, makes that case unreached and travels back as the blocker it is — diagnosis is the next job, not this one.
-
-Anything that looks broken along the way is worth noting even when no case asks about it — carry it back as an observation.
-
-Done when every case in the set came back as exactly one of pass, observed/expected, or unreached.
+Done when every case in the set came back carrying exactly one of WALKER.md's three verdicts — pass, observed/expected, or unreached — with observations alongside.
 
 ## 4. Report
 
@@ -79,7 +65,7 @@ Otherwise split what came back, and let the user decide what happens to each:
 
 - **In scope** — the change under test is wrong. Observed versus expected, in context, with the steps. Report it and stop; fix on the user's go-ahead.
 - **Out of scope** — real, but not this change. Observed behaviour and reproduction steps only, because guessing at the cause biases whoever picks it up. Where the project has an issues directory, one file per finding, marked for triage; otherwise inline.
-- **Unsure** — it looked odd and the case says nothing about it. One line each. Smoke runs have no Unsure: an observation either clears the obviously-broken bar and is out of scope, or it is not a finding.
+- **Unsure** — it looked odd and the case says nothing about it. One line each.
 
 A finding that broke something previously working earns a committed regression test, so the next run does not rediscover it by hand. Say which one.
 

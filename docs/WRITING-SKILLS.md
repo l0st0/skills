@@ -18,6 +18,8 @@ Every skill here is written against the `mattpocock-skills:writing-for-agents` s
 
 `verify-in-browser` step 2 reads the setup file that `verify-in-browser-setup` step 6 writes. Change the section list in one and the other goes stale. That file lives in the *consuming* project — at the path its `AGENTS.md`/`CLAUDE.md` names, or `.claude/verify-in-browser.md` — never here.
 
+`verify-in-browser` step 3 hands `WALKER.md` to sub-agents verbatim. That file is walker-facing only: it is the single source of truth for the verdicts, and the report step must never leak into it — a walker that can see the report has a way to finish other than walking.
+
 ## Per-agent metadata
 
 `skills/<name>/agents/openai.yaml` carries `display_name` and `short_description` for CLI installs into non-Claude agents. A new skill needs one.
