@@ -1,37 +1,41 @@
 ---
 name: verify-in-browser-setup
-description: Build or repair the per-project setup file a browser walk runs on. Use when that file is missing or incomplete, when a walk's driver or credentials stopped working, or when a project gains a persona.
+description: Build or repair the per-project setup file a browser walk runs on. Use when that file is missing or incomplete, when a walk's preflight probe fails, when a driver or credential stopped working, or when a project gains a persona or a prerequisite.
 ---
 
 # Verify in browser — setup
 
-`verify-in-browser` walks a change through the running app; this writes the file that walk runs on, and the walk is only as good as this file is true.
+`verify-in-browser` walks a change through the running app; this writes the file that walk runs on — schema in [TEMPLATE.md](TEMPLATE.md) — and the walk is only as good as this file is true.
 
-The file names what the environment cannot say for itself, and nothing more. Scripts, compose files and `.env.example` are already a source of truth — restating them here only gives them somewhere to go stale.
+One split shapes every step: **facts** come from the environment and are proven by running them; **decisions** come from the user, asked in one round. The user is never asked for a fact the repo states, and the file never carries a fact this session did not prove.
 
-A repair run re-enters at the step that broke — a dead driver at step 2, a new gap at step 3, a fixture that no longer loads at step 4, a failed credential or a new persona at step 5 — and rewrites only the sections it touched. Every step's done-criterion still binds.
+A repair run re-enters at the step that broke — a failed probe at step 2, a dead driver or a new decision at step 3, a fixture that no longer loads at step 4, a failed credential or a new persona at step 5 — and rewrites only the sections it touched. Every step's done-criterion still binds.
 
-## 1. Read the environment
+## 1. Sweep the environment
 
-Before asking the user anything, take from the repo what it already states: the scripts that serve each app and the ports they answer on, seed and reset scripts and whatever guards them, `.env.example` and the keys a startup check demands, existing test fixtures and the personas they imply.
+Before the user is asked anything, take from the repo what it already states: the scripts that serve each app and the ports they answer on, seed and reset scripts and whatever guards them, `.env.example` and the keys a startup check demands, existing test fixtures and the personas they imply.
 
-The repo states the commands; this session proves them. Every command headed for the file runs before it is written, and exit 0 is not proof: a seed script whose flag the installed package-manager version no longer takes prints the script list and exits clean, and every walk that reads that file believes it seeded. Check the command did the thing.
+Then sweep for **prerequisites** — everything the app needs around it to run testably. The categories, so none is skipped silently: data store, auth provider, external APIs, secrets, background workers, email. The repo signals each one — a compose service, an SDK import, an env key a startup check demands; the category list is what turns the reading into a sweep.
 
-Done when you can name every app the project serves and every command that puts data behind it.
+List the drivers this session can actually invoke — a browser-automation skill, a browser MCP server, the project's own end-to-end harness driven headed. None, say so and stop: the walk has nothing to walk with, and the rest of the setup is wasted until the user installs one.
 
-## 2. Choose the driver
+Done when every app, every command that puts data behind it, and every prerequisite category has been swept — each found or ruled out.
 
-The **driver** is how this session drives a browser: a browser-automation skill, a browser MCP server, or the project's own end-to-end harness driven headed.
+## 2. Probe the prerequisites
 
-List what this session actually has. More than one, ask the user which to use. None, say so and stop — the walk has nothing to walk with, and the rest of the setup is wasted until they install one.
+Each prerequisite gets a **probe**: a command that proves it in place by exercising it — connect to the data store, resolve the auth tenant, call the API with the configured key. Presence is not proof, and neither is exit 0: an env key can exist and be wrong, and a seed script whose flag the installed package-manager version no longer takes prints the script list and exits clean. Check the command did the thing.
 
-Done when one driver is named, and it is one this session can invoke right now.
+A failing probe this session can fix — a container not started, a dependency not installed — gets fixed and re-run. One that needs a human — a tenant to provision, a secret only they can mint — becomes a Missing-prerequisites gap for step 3.
 
-## 3. Ask for the rest, one round
+A passing probe goes into the file verbatim: it is the preflight line every walk re-runs, so keep it cheap and read-only.
 
-Put every remaining gap into a single round of questions. The gaps are always some of: which app a walk targets by default, which personas exist and what role each holds, where their credentials live, and how a private or token-gated surface is reached.
+Done when every prerequisite carries a probe that passed this session, or a named gap a human owns.
 
-Where a step needs a human — provisioning an account, an SSO tenant, a secret only they can mint — offer to generate a setup script, using a wizard skill if one is available, and write it only if the user says yes. Otherwise name what is missing and let them do it their own way.
+## 3. Ask the decisions, one round
+
+Show what was found and proven first, so a wrong inference is caught by reading rather than asking. Then put every remaining decision into a single structured round, each question carrying the inferred answer as its recommended default: which driver, when more than one; which app a walk targets by default; the personas and the role each holds; where their credentials live; how a gated surface is reached; and the **agreed surface** — the flows per persona that, passing, mean the app works.
+
+Where a gap needs a human — provisioning an account, an SSO tenant, a secret only they can mint — offer to generate a setup script, using a wizard skill if one is available, and write it only if the user says yes. Otherwise name what is missing and let them do it their own way.
 
 Done when every question is asked once and answered, or recorded as a gap the user owns.
 
@@ -49,24 +53,12 @@ Done when the seed ran and did the thing, and a fixture was created and torn dow
 
 Drive the browser to the sign-in screen and sign in as each credential, one at a time. An unverified login burns a whole walk on a login screen.
 
-A credential that signs in becomes a row. A credential that fails, and a persona with no holder yet, stays out of the table and goes into a **Missing personas** section naming what has to be created and where — so the next walk reads the gap instead of discovering it.
-
-Credentials go in as env var names wherever the app already reads them that way. Where a literal is unavoidable, confirm the file is gitignored before writing it.
+A credential that signs in becomes a row; a credential that fails, and a persona with no holder yet, goes to Missing personas instead.
 
 Done when every row in the persona table signed in during this run.
 
 ## 6. Write it, and point at it
 
-Write the file where the project keeps its agent docs; absent that convention, `.claude/verify-in-browser.md`. Add the pointer to `CLAUDE.md` or `AGENTS.md` so the next walk finds it.
+Write the file against [TEMPLATE.md](TEMPLATE.md) — its sections, in its order — where the project keeps its agent docs; `CLAUDE.md` or `AGENTS.md` names the place, and absent that convention, `.claude/verify-in-browser.md`. Add the pointer to `CLAUDE.md` or `AGENTS.md` so the next walk finds it.
 
-Sections, in this order:
-
-- **Driver** — the one chosen, and one line on why, so a later run does not re-litigate it.
-- **Serving** — the command, the base URL per app, and what an unauthenticated request does (a redirect that a walk mistakes for a failure is worth the line).
-- **Data** — the seed or reset command, its guards, what the seed leaves empty, and what the destructive path does when a walk invokes it by accident: a reset that refuses without an explicit env flag is the fact that stops a walk from panicking.
-- **Fixtures** — where the scripts live, the command that runs one, and the teardown rules this schema forces: the tag a created row carries and the prefix its teardown deletes by, the FK constraints that fix the delete order, and every system beyond the database a teardown has to clean — an auth provider still holding users the next fixture run collides on.
-- **Personas** — the table of verified logins with roles, then **Missing personas**.
-- **Reaching gated surfaces** — how a token-gated or invite-only page is opened, when one exists.
-- **Gotchas** — only what no config confesses: the interface language a selector has to match, two controls whose labels prefix-collide, a screen that needs a hard reload.
-
-Done when the file exists, is reachable from the pointer, and every command it names ran in this session.
+Done when the file exists, is reachable from the pointer, carries every TEMPLATE.md section, and every command it names ran in this session.

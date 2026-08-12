@@ -18,7 +18,7 @@ Take the first rung that applies, and stop there:
 | Spec or tickets for this change | cases and expected | the spec |
 | An axis the user provided | cases | ask the user, per case |
 | Branch diff, then PR diff | cases | ask the user, one round, per case |
-| Nothing | — | **stop and ask what to test** |
+| Nothing | the setup file's agreed surface | **offer a smoke run over it; none agreed or declined, stop and ask** |
 
 Where the oracle is the user, present the case list you derived and ask them to confirm what each case should do. One round, then walk.
 
@@ -26,7 +26,7 @@ When the change is in a read path, the store underneath it is an oracle too, and
 
 Name the **axis** — the dimension along which behaviour is meant to differ — and list the screens the change touches. The scenario set is axis × screens, and every point on the axis appears in at least one case.
 
-Smoke is a mode, not a rung: the user asks for it and names the surface, and the ladder is skipped — the cases are the named surface, per persona. It has no per-case expected, so it runs against the **obviously-broken bar** instead: console errors, failed requests, 404s and 500s, blank regions where content should render, stuck loading states, unhandled errors, dead links, controls that render but do not respond. The bar is binary — an observation clears it and is a finding, or it is not one — so a smoke walk reports no Unsure.
+Smoke is a mode, not a rung: the user asks for it and the ladder is skipped — the cases are the surface per persona, the setup file's **agreed surface** unless the user names one. It has no per-case expected, so it runs against the **obviously-broken bar** instead: console errors, failed requests, 404s and 500s, blank regions where content should render, stuck loading states, unhandled errors, dead links, controls that render but do not respond. The bar is binary — an observation clears it and is a finding, or it is not one — so a smoke walk reports no Unsure.
 
 ### Bound the set
 
@@ -37,13 +37,13 @@ The set has a floor and a ceiling, and both hand the decision back:
 
 Done when every case carries a persona, an entry point, steps, and an expected result — or, in smoke, a persona and a surface to cover — and a set that crossed the ceiling is one the user has seen.
 
-## 2. Load the setup
+## 2. Load the setup, run its preflight
 
-Read the project's verify-in-browser setup file. `CLAUDE.md` or `AGENTS.md` names where the project keeps its agent docs; absent that convention, `.claude/verify-in-browser.md`.
+Read the project's verify-in-browser setup file. `CLAUDE.md` or `AGENTS.md` names where the project keeps its agent docs; absent that convention, `.claude/verify-in-browser.md`. Missing, or short of what your cases need, run `verify-in-browser-setup` and come back here with the file it writes — its TEMPLATE.md owns what a complete file contains; do not re-derive the schema here.
 
-Present and answering everything your cases need — a driver this session can invoke, how to serve, who signs in, where fixtures live — go to step 3. The setup skill owns what a complete file contains; do not re-derive its schema here.
+Then run the **preflight**: the probe command each prerequisite in the file carries. A failed probe is a setup problem, never a finding — run `verify-in-browser-setup` in repair at the step that owns it and come back; only a repair that needs a human stops the walk, naming what they must do.
 
-Missing, or short of what your cases need, run `verify-in-browser-setup` and come back here with the file it writes.
+Done when the file answers everything your cases need and every probe in it passed this session.
 
 ## 3. Walk them
 

@@ -2,7 +2,7 @@
 
 You are one walker in a browser verification walk. You hold a **lane** — a driver session of your own and, where you write, records of your own — and a list of cases. Your job is to walk every case you hold to a verdict.
 
-The setup file you were handed names the driver, the serve command, the personas, and the fixture rules. It is the only project knowledge you need; trust it over guessing.
+The setup file you were handed is the only project knowledge you need; trust it over guessing.
 
 ## Your lane
 
