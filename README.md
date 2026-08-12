@@ -1,20 +1,26 @@
 # skills
 
-Agent skills for building a ticket queue and for the third axis of review: walking a change through the running app in a browser.
+Three agent skills. One works through a queue of tickets while you're away. The other two check a finished change by clicking through the running app instead of reading the diff.
 
-A code review reads the diff against standards and spec. The browser walk runs against branch changes, a PR, or a full application smoke.
+## implement-batch
 
-## Skills
+Point it at a folder of tickets and walk away.
 
-| Skill | What it does |
-| --- | --- |
-| [`implement-batch`](skills/implement-batch/SKILL.md) | Implements a queue of tracker tickets one at a time — a pre-flight asks whatever the tickets leave open, a subagent builds each, you review it, a second subagent fixes what blocks. Never pushes. |
-| [`verify-in-browser`](skills/verify-in-browser/SKILL.md) | Derives cases from the spec or diff, dispatches one walker per persona with its own write lane, and reports pass / observed-vs-expected / unreached. |
-| [`verify-in-browser-setup`](skills/verify-in-browser-setup/SKILL.md) | Builds or repairs the per-project file the walk runs on — driver, serve command and base URL, seed command, where per-walk fixtures live, and one signed-in login per persona. |
+Before it starts, it reads every ticket and asks you everything they leave open in one pass. That's the last time it needs you at the keyboard. Then, ticket by ticket: a builder subagent implements the work as a single commit, the commit gets a code review against the ticket, and a fixer subagent amends whatever the review blocks on. A ticket that still fails review after one fix round is parked on a `failed/<ticket>` branch, tickets that depended on it are skipped, and the queue moves on.
 
-`verify-in-browser` calls `verify-in-browser-setup` when the setup file is missing, so install both.
+Every ticket gets a row in a run log as the run goes, so when you come back you read one table: what landed, what failed, what got flagged but not fixed. Nothing is ever pushed.
 
-`implement-batch` is invoked by hand as `/implement-batch`; it never routes itself.
+Invoke it by hand as `/implement-batch`; it never triggers itself.
+
+## verify-in-browser
+
+A code review reads the diff. This skill starts the app and watches the change behave.
+
+It derives its cases from the spec or the diff, then walks the app once per persona, each walker in its own browser session with its own data so they don't trample each other. Each case comes back with one of three verdicts: pass, observed-vs-expected when the app did something else, or unreached when the walk couldn't get there.
+
+## verify-in-browser-setup
+
+The walk needs project specifics: how to serve the app, the base URL, how to seed data, how each persona signs in. This skill builds that setup file and repairs it when it drifts. You rarely call it yourself; `verify-in-browser` reaches for it when the file is missing.
 
 ## Install
 
@@ -33,9 +39,9 @@ Claude Code, as a plugin:
 
 ## Requirements
 
-`implement-batch` calls the `code-review` and `tdd` skills, which ship separately (`mattpocock-skills`). Without them its review step has nothing to invoke.
+`implement-batch` drives the `code-review` and `tdd` skills from `mattpocock-skills`, which ship separately. Install those too, or its review step has nothing to invoke.
 
-The walk needs a way to drive a browser — a browser-automation skill, a browser MCP server, or the project's own end-to-end harness run headed. `verify-in-browser-setup` will tell you if the session has none.
+The browser walk needs a way to drive a browser: a browser-automation skill, a browser MCP server, or the project's own end-to-end harness run headed. The setup skill tells you if the session has none.
 
 ## License
 
