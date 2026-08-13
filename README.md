@@ -2,6 +2,8 @@
 
 Four agent skills. `implement-batch` works through a queue of tickets while you're away. `bump-deps` keeps your dependencies current without gambling on the risky ones. `verify-in-browser` and its setup skill check a finished change by clicking through the running app instead of reading the diff.
 
+These are built as additions to [Matt Pocock's skills](https://github.com/mattpocock/skills), which I recommend installing first. `implement-batch` and `bump-deps` call into that suite directly.
+
 ## Install
 
 Any agent, via the [skills CLI](https://skills.sh):
