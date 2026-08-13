@@ -37,7 +37,7 @@ Tickets can live anywhere `docs/agents/issue-tracker.md` describes: GitHub, GitL
 
 ## bump-deps
 
-Audits your direct dependencies and splits them by risk.
+Audits your direct dependencies and splits them by risk. In a workspace repo that means every manifest — root, apps, packages, catalogs — with a package shared across workspaces judged and bumped as one unit.
 
 Patch and minor bumps go into one batch. Majors and 0.x bumps get their breaking changes researched against your codebase first; the harmless ones join the batch too. It stops once, so you can confirm the batch and settle any open decisions. The batch lands as one commit on a `deps/` branch and has to pass your project's checks. A package that breaks them, or any upgrade that means real work, becomes a tracker ticket with the research linked, ready for `implement-batch` to pick up.
 
