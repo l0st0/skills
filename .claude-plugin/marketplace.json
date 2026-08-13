@@ -18,7 +18,16 @@
       },
       "repository": "https://github.com/l0st0/skills",
       "license": "MIT",
-      "keywords": ["qa", "browser", "verification", "code-review", "e2e", "smoke-test", "tickets", "implementation"]
+      "keywords": [
+        "qa",
+        "browser",
+        "verification",
+        "code-review",
+        "e2e",
+        "smoke-test",
+        "tickets",
+        "implementation"
+      ]
     }
   ]
 }
