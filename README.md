@@ -6,25 +6,19 @@ Three agent skills. One works through a queue of tickets while you're away. The 
 
 Point it at your tracker's ready tickets and walk away.
 
-Tickets can live anywhere the repo's `docs/agents/issue-tracker.md` describes: GitHub issues, GitLab, a Jira workflow you wrote down, or plain markdown files under `.scratch/`. Run it with no arguments and it queues every open ticket labelled `ready-for-agent`, ordered so blocking work builds first. A ticket that depends on something unfinished outside the queue gets skipped instead of built on missing work.
+It queues every open ticket labelled `ready-for-agent`, reads them all, and asks you everything they leave open in one pass. That's the last time it needs you at the keyboard. Then it works the queue: build a ticket as one commit, review the commit against the ticket, amend what the review blocks on. A ticket that still fails review is parked on a `failed/<ticket>` branch and its dependents are skipped.
 
-Before anything builds, it reads every ticket and asks you everything they leave open, in one pass. That's the last time it needs you at the keyboard. Your answers are posted back onto the tickets, so the reviewer later reads the same spec the builder did.
+When you come back, you read one table: what landed, what failed, what was flagged but not fixed. Nothing is ever pushed.
 
-Then it works the queue one ticket at a time. A builder subagent implements the ticket as a single commit. The commit gets a code review against the ticket. A fixer subagent amends whatever the review blocks on: a broken repo standard, a missed requirement, or a demonstrated bug. A ticket that still fails review after one fix round is parked on a `failed/<ticket>` branch, its dependents are skipped, and the queue moves on.
-
-Every ticket gets a row in a run log as the run goes. When you come back, you read one table: what landed, what failed, what was flagged but not fixed. Nothing is ever pushed.
-
-Invoke it by hand as `/implement-batch`; it never triggers itself.
+Tickets can live anywhere `docs/agents/issue-tracker.md` describes: GitHub, GitLab, Jira, or plain markdown under `.scratch/`. Invoke it by hand as `/implement-batch`; it never triggers itself.
 
 ## verify-in-browser
 
-A code review reads the diff. This skill starts the app and watches the change behave.
-
-It derives its cases from the spec or the diff, then walks the app once per persona. Each walker gets its own browser session and its own data, so they don't trample each other. Before anything walks, it runs the setup file's preflight, probing the database, the auth provider, whatever the app needs; a broken environment gets repaired instead of reported as a finding. Each case comes back with one of three verdicts: pass, observed-vs-expected when the app did something else, or unreached when the walk couldn't get there.
+Starts the app and watches the change behave. It derives cases from the spec or the diff, then walks the app once per persona, each with its own browser session and data. A preflight repairs a broken environment instead of reporting it as a finding. Every case comes back pass, observed-vs-expected, or unreached.
 
 ## verify-in-browser-setup
 
-The walk needs project specifics: how to serve the app, what has to be running around it (database, auth provider, API keys), how to seed data, how each persona signs in, and which flows mean the app works. This skill reads the codebase for those facts and proves each one by running it. You get asked only the genuine decisions, in one round. It writes the setup file the walk runs on, and repairs it when it drifts. You rarely call it yourself; `verify-in-browser` reaches for it when the file is missing or a preflight probe fails.
+Writes the setup file the walk runs on: how to serve the app, what has to be running around it, how to seed data, how each persona signs in, which flows mean the app works. It reads the codebase for those facts and proves each one by running it, asking you only the genuine decisions. You rarely call it yourself; `verify-in-browser` reaches for it when the file is missing or a probe fails.
 
 ## Install
 
@@ -43,7 +37,7 @@ Claude Code, as a plugin:
 
 ## Requirements
 
-`implement-batch` drives the `code-review` and `tdd` skills from `mattpocock-skills`, which ship separately. Install those too, or its review step has nothing to invoke. It finds your tickets through `docs/agents/issue-tracker.md`, the file `/setup-matt-pocock-skills` writes; without one it falls back to markdown tickets under `.scratch/`.
+`implement-batch` drives the `code-review` and `tdd` skills from `mattpocock-skills`, which ship separately. Without them its review step has nothing to invoke.
 
 The browser walk needs a way to drive a browser: a browser-automation skill, a browser MCP server, or the project's own end-to-end harness run headed. The setup skill tells you if the session has none.
 
