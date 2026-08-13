@@ -4,15 +4,15 @@
     "name": "l0st0"
   },
   "metadata": {
-    "description": "Agent skills for implementing a ticket queue and walking a change through the running app in a browser",
+    "description": "Agent skills for implementing a ticket queue, walking a change through the running app in a browser, and bumping dependencies safely",
     "version": "1.0.0"
   },
   "plugins": [
     {
       "name": "l0st0-skills",
       "source": ".",
-      "description": "Implement a queue of tracker tickets with review between each, and walk a change through the running app across every persona",
-      "version": "1.1.0",
+      "description": "Implement a queue of tracker tickets with review between each, walk a change through the running app across every persona, and bump dependencies safely — risky upgrades researched and ticketed",
+      "version": "1.2.0",
       "author": {
         "name": "l0st0"
       },
@@ -26,7 +26,9 @@
         "e2e",
         "smoke-test",
         "tickets",
-        "implementation"
+        "implementation",
+        "dependencies",
+        "upgrades"
       ]
     }
   ]

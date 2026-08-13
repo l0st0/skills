@@ -12,7 +12,7 @@ Every skill here is written against the `mattpocock-skills:writing-for-agents` s
 
 ## Frontmatter
 
-`description` is a routing decision — it states *when* to reach for the skill, not what it is. `README.md` retells each skill in prose for human readers, and both manifests under `.claude-plugin/` mirror it loosely. Changing a skill's behaviour means checking those.
+`description` is a routing decision — it states *when* to reach for the skill, not what it is. That holds for model-invoked skills; a user-invoked skill (`disable-model-invocation: true`) hides its description from the agent, so there it is a human-facing one-line summary instead, trigger lists stripped. `README.md` retells each skill in prose for human readers, and both manifests under `.claude-plugin/` mirror it loosely. Changing a skill's behaviour means checking those.
 
 ## The two skills are coupled
 
