@@ -2,6 +2,27 @@
 
 Four agent skills. `implement-batch` works through a queue of tickets while you're away. `bump-deps` keeps your dependencies current without gambling on the risky ones. `verify-in-browser` and its setup skill check a finished change by clicking through the running app instead of reading the diff.
 
+## Install
+
+Any agent, via the [skills CLI](https://skills.sh):
+
+```sh
+npx skills add l0st0/skills
+```
+
+Claude Code, as a plugin:
+
+```
+/plugin marketplace add l0st0/skills
+/plugin install l0st0-skills@l0st0
+```
+
+## Requirements
+
+`implement-batch` drives the `code-review` and `tdd` skills from `mattpocock-skills`, which ship separately. Without them its review step has nothing to invoke. `bump-deps` uses the `research` skill from the same suite when it's present, and falls back to researching inline when it isn't.
+
+The browser walk needs a way to drive a browser: a browser-automation skill, a browser MCP server, or the project's own end-to-end harness run headed. The setup skill tells you if the session has none.
+
 ## implement-batch
 
 Point it at your tracker's ready tickets and walk away.
@@ -27,27 +48,6 @@ Starts the app and watches the change behave. It derives cases from the spec or 
 ## verify-in-browser-setup
 
 Writes the setup file the walk runs on: how to serve the app, what has to be running around it, how to seed data, how each persona signs in, which flows prove the app works. It reads the codebase for those facts, proves each one by running it, and asks you only about the genuine decisions. You rarely call it yourself; `verify-in-browser` reaches for it when the file is missing or a probe fails.
-
-## Install
-
-Any agent, via the [skills CLI](https://skills.sh):
-
-```sh
-npx skills add l0st0/skills
-```
-
-Claude Code, as a plugin:
-
-```
-/plugin marketplace add l0st0/skills
-/plugin install l0st0-skills@l0st0
-```
-
-## Requirements
-
-`implement-batch` drives the `code-review` and `tdd` skills from `mattpocock-skills`, which ship separately. Without them its review step has nothing to invoke. `bump-deps` uses the `research` skill from the same suite when it's present, and falls back to researching inline when it isn't.
-
-The browser walk needs a way to drive a browser: a browser-automation skill, a browser MCP server, or the project's own end-to-end harness run headed. The setup skill tells you if the session has none.
 
 ## License
 
