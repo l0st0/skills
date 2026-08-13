@@ -1,7 +1,7 @@
 {
   "name": "l0st0-skills",
   "description": "Implement a queue of tracker tickets with review between each, walk a change through the running app across every persona, and bump dependencies safely — risky upgrades researched and ticketed",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "author": {
     "name": "l0st0"
   },
