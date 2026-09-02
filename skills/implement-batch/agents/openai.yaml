@@ -1,3 +1,0 @@
-interface:
-  display_name: "Implement Batch"
-  short_description: "Work a ticket queue unattended: build, review, fix per ticket"

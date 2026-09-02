@@ -1,3 +1,0 @@
-interface:
-  display_name: "Bump Deps"
-  short_description: "Bump safe dependencies as one commit; ticket the majors with research"
