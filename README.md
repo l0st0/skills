@@ -1,8 +1,10 @@
 # skills
 
-Four agent skills. `implement-batch` works through a queue of tickets while you're away. `bump-deps` keeps your dependencies current without gambling on the risky ones. `verify-in-browser` and its setup skill check a finished change by clicking through the running app instead of reading the diff.
+Two agent skills. `verify-in-browser` checks a finished change by clicking through the running app instead of reading the diff, and `verify-in-browser-setup` writes the file that walk runs on.
 
-These are built as additions to [Matt Pocock's skills](https://github.com/mattpocock/skills), which I recommend installing first. `implement-batch` and `bump-deps` call into that suite directly.
+These are built as additions to [Matt Pocock's skills](https://github.com/mattpocock/skills), which I recommend installing first.
+
+`verify-in-browser` is invoke-only — it carries `disable-model-invocation: true`, so an agent never starts a walk on its own; you trigger it by hand as `/verify-in-browser`. The setup skill stays reachable so the walk can run it when the setup file is missing or a probe fails.
 
 ## Install
 
@@ -21,27 +23,7 @@ Claude Code, as a plugin:
 
 ## Requirements
 
-`implement-batch` drives the `code-review` and `tdd` skills from `mattpocock-skills`, which ship separately. Without them its review step has nothing to invoke. `bump-deps` uses the `research` skill from the same suite when it's present, and falls back to researching inline when it isn't.
-
 The browser walk needs a way to drive a browser: a browser-automation skill, a browser MCP server, or the project's own end-to-end harness run headed. The setup skill tells you if the session has none.
-
-## implement-batch
-
-Point it at your tracker's ready tickets and walk away.
-
-It queues every open ticket labelled `ready-for-agent`, reads them all, and asks you everything they leave open in one pass. That's the last time it needs you at the keyboard. Then it works the queue: it builds each ticket as one commit, reviews the commit against the ticket, and amends the commit to fix whatever the review blocks on. A ticket that still fails review is parked on a `failed/<ticket>` branch and its dependents are skipped.
-
-When you come back, you read one table: what landed, what failed, what was flagged but not fixed. Nothing is ever pushed.
-
-Tickets can live anywhere `docs/agents/issue-tracker.md` describes: GitHub, GitLab, Jira, or plain markdown under `.scratch/`. Invoke it by hand as `/implement-batch`; it never triggers itself.
-
-## bump-deps
-
-Audits your direct dependencies and splits them by risk. In a workspace repo that means every manifest — root, apps, packages, catalogs — with a package shared across workspaces judged and bumped as one unit.
-
-Patch and minor bumps go into one batch. Majors and 0.x bumps get their breaking changes researched against your codebase first; the harmless ones join the batch too. It stops once, so you can confirm the batch and settle any open decisions. The batch lands as one commit on a `deps/` branch and has to pass your project's checks. A package that breaks them, or any upgrade that means real work, becomes a tracker ticket with the research linked, ready for `implement-batch` to pick up.
-
-It never pushes and never starts the app. Runtime testing stays yours. Invoke it by hand as `/bump-deps`; it never triggers itself.
 
 ## verify-in-browser
 
