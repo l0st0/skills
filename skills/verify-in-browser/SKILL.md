@@ -1,6 +1,7 @@
 ---
 name: verify-in-browser
 description: Walk a change through the running app in a browser, across every persona, and report what it actually does. Use when the user asks to verify, QA, or smoke a change in the running app, when a code review has passed and the change has not been seen running, or when a spec's behaviour has to be seen rather than read.
+disable-model-invocation: true
 ---
 
 # Verify in browser
