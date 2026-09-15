@@ -11,8 +11,8 @@
     {
       "name": "l0st0-skills",
       "source": ".",
-      "description": "Walk a change through the running app across every persona, and write the per-project setup file that walk runs on",
-      "version": "2.0.0",
+      "description": "Walk a change through the running app, one walker per persona, and report what it actually does",
+      "version": "3.0.0",
       "author": {
         "name": "l0st0"
       },
