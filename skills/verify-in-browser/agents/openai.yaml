@@ -1,3 +1,0 @@
-interface:
-  display_name: "Verify in Browser"
-  short_description: "Walk a change through the running app, one walker per persona"

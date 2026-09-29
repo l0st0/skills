@@ -4,15 +4,15 @@
     "name": "l0st0"
   },
   "metadata": {
-    "description": "Agent skills for walking a change through the running app in a browser",
+    "description": "Agent skills for running a finished change on every surface it touches",
     "version": "1.1.0"
   },
   "plugins": [
     {
       "name": "l0st0-skills",
       "source": ".",
-      "description": "Walk a change through the running app, one walker per persona, and report what it actually does",
-      "version": "3.1.0",
+      "description": "Run a finished change on every surface it touches, one walker per persona, and report what it actually does",
+      "version": "4.0.0",
       "author": {
         "name": "l0st0"
       },
@@ -20,6 +20,7 @@
       "license": "MIT",
       "keywords": [
         "qa",
+        "acceptance",
         "browser",
         "verification",
         "e2e",
