@@ -1,7 +1,7 @@
 {
   "name": "l0st0-skills",
-  "description": "Walk a change through the running app, one walker per persona, and report what it actually does",
-  "version": "3.1.0",
+  "description": "Run a finished change on every surface it touches, one walker per persona, and report what it actually does",
+  "version": "4.0.0",
   "author": {
     "name": "l0st0"
   },
