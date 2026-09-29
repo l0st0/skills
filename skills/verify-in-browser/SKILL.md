@@ -22,7 +22,7 @@ Done when the app is served and seeded, and every persona the cases need signed 
 
 ## 3. Dispatch the walkers
 
-One sub-agent per persona, in parallel, handed the base URL, its login, the file's Data and Gotchas sections, and its cases with expecteds. The dispatch prompt carries the walker's rules and nothing of the report: create only records prefixed with your persona and delete them when done; fix what blocks the walk — a stale flag, a broken seed — and leave the behaviour under test as found; return each case as exactly one of **pass**, **observed X, expected Y** with the steps, or **unreached** with the blocker, plus anything that looked broken along the way.
+One fresh sub-agent per persona, in parallel, dispatched with `model: "sonnet"` in Claude Code, handed the base URL, its login, the file's Data and Gotchas sections, and its cases with expecteds. The dispatch prompt carries the walker's rules and nothing of the report: create only records prefixed with your persona and delete them when done; fix what blocks the walk — a stale flag, a broken seed — and leave the behaviour under test as found; return each case as exactly one of **pass**, **observed X, expected Y** with the steps, or **unreached** with the blocker, plus anything that looked broken along the way.
 
 Done when every case came back with one verdict.
 
