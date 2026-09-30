@@ -28,7 +28,7 @@ _Avoid_: test, scenario
 The result a case should produce, inferred from the input and stated so a wrong inference is caught by reading.
 
 **Walker**:
-A sub-agent that runs one persona's cases across every surface they touch; cases with no persona go to the system walker.
+A sub-agent that runs a batch of one persona's cases across every surface they touch; cases with no persona go to system walkers.
 _Avoid_: tester, runner, prober
 
 **Verdict**:
