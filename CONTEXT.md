@@ -25,7 +25,10 @@ One check against a surface: a persona, an entry point, steps, and an expected r
 _Avoid_: test, scenario
 
 **Expected**:
-The result a case should produce, inferred from the input and stated so a wrong inference is caught by reading.
+The result a case should produce, inferred from the input and stated so a wrong inference is caught by reading. One the default branch would also produce checks nothing about the change.
+
+**Regression**:
+A case whose expected is behaviour the change must keep, rather than behaviour it adds.
 
 **Walker**:
 A sub-agent that runs a batch of one persona's cases across every surface they touch; cases with no persona go to system walkers.
