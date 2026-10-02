@@ -16,7 +16,7 @@ Every skill here is written against the `mattpocock-skills:writing-for-agents` s
 
 ## The local testing guide
 
-`shakedown` step 2 writes and reads `docs/local-testing.md` in the *consuming* project, never here. Its sections are defined inline in that step, the single source of truth for the schema.
+`shakedown` step 2 writes and reads `docs/local-testing.md` in the *consuming* project, never here, and step 4 folds every walker's environment fix back into it, so the guide learns what each run had to repair. Its sections are defined inline in step 2, the single source of truth for the schema.
 
 Step 3 hands sub-agents their rules inline in the dispatch prompt, and nothing of the report step: a walker that can see the report has a way to finish other than walking.
 

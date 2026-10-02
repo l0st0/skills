@@ -29,7 +29,7 @@ Browser cases need a way to drive a browser: a browser-automation skill, a brows
 
 Hand it a spec, a PR, a branch, or a sentence. It derives cases with an expected result each, names the personas the change touches and the surface each case is observed on, starts the app locally, seeds data, signs in, and dispatches parallel sub-agents, each walking a small batch of one persona's cases. Every case comes back pass, observed-vs-expected, or unreached. Given a spec, the report ends on a table of every acceptance criterion against its verdicts.
 
-The first run sets up local testing with you: it sweeps the repo for what it can find, asks you the decisions it cannot make — how to seed, which stand-in catches outbound email — proves each by running it, and commits `docs/local-testing.md` with any setup files. Later runs read that guide and repair any fact that stopped being true.
+The first run sets up local testing with you: it sweeps the repo for what it can find, asks you the decisions it cannot make — how to seed, which stand-in catches outbound email — proves each by running it, and commits `docs/local-testing.md` with any setup files. Later runs read that guide, repair any fact that stopped being true, and fold in whatever the walkers had to fix along the way, so the next run doesn't trip on it.
 
 ## License
 
