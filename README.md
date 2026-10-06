@@ -34,7 +34,7 @@ Give it a spec, a PR, a branch, or a one-line description. It then:
 
 ## The first run
 
-The first time, it sets up local testing with you. It looks through the repo for what it can work out, asks you about the rest (how to seed data, what catches outgoing email), tests each answer by running it, and commits the result as `docs/local-testing.md` along with any setup files.
+The first time, it sets up local testing with you. It looks through the repo for what it can work out, asks you about the rest (how to seed data, what catches outgoing email), tests each answer by running it, and writes the result to `docs/local-testing.md` along with any setup files. It leaves them uncommitted, like every file it changes. It commits, pushes, opens a PR or posts a comment only when you explicitly say yes to that step.
 
 Later runs read that guide, fix anything in it that's gone stale, and add whatever the sub-agents had to fix along the way, so the next run doesn't hit the same problem.
 
