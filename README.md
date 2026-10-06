@@ -1,10 +1,8 @@
 # skills
 
-One agent skill. `shakedown` checks a finished change by running it — in the browser, against the API, in the database, wherever the change shows — instead of reading the diff.
+One skill for coding agents: `shakedown`. When a change is done, it runs the app and checks that the change works, instead of only reading the diff. It looks wherever the change shows up: the app's interface, the API, the database.
 
-It is built as an addition to [Matt Pocock's skills](https://github.com/mattpocock/skills), which I recommend installing first. Run it last, after `code-review`.
-
-The skill is invoke-only — it carries `disable-model-invocation: true`, so an agent never starts a shakedown on its own; you trigger it by hand as `/shakedown`.
+Use it last, after code review. It only runs when you type `/shakedown`. The agent never starts one on its own.
 
 ## Install
 
@@ -23,13 +21,22 @@ Claude Code, as a plugin:
 
 ## Requirements
 
-Browser cases need a way to drive a browser: a browser-automation skill, a browser MCP server, or the project's own end-to-end harness run headed.
+The sub-agents need a way to drive each place the change shows up: an automation skill or MCP server for the app's interface, or the project's own end-to-end test harness.
 
-## shakedown
+## How it works
 
-Hand it a spec, a PR, a branch, or a sentence. It derives cases with an expected result each, names the personas the change touches and the surface each case is observed on, starts the app locally, seeds data, signs in, and dispatches parallel sub-agents, each walking a small batch of one persona's cases. Every case comes back pass, observed-vs-expected, or unreached. Given a spec, the report ends on a table of every acceptance criterion against its verdicts.
+Give it a spec, a PR, a branch, or a one-line description. It then:
 
-The first run sets up local testing with you: it sweeps the repo for what it can find, asks you the decisions it cannot make — how to seed, which stand-in catches outbound email — proves each by running it, and commits `docs/local-testing.md` with any setup files. Later runs read that guide, repair any fact that stopped being true, and fold in whatever the walkers had to fix along the way, so the next run doesn't trip on it.
+1. Writes test cases, each with an expected result, the persona it runs as, and where the result is checked.
+2. Gets the change running locally, seeds data, and signs in.
+3. Sends sub-agents on a cheaper model to walk the cases in parallel. Each one takes a batch of one persona's cases.
+4. Reports every case as pass, failed (what it saw next to what it expected), or unreached (what blocked it). If you gave it a spec, the report ends with a table of each acceptance criterion and its result.
+
+## The first run
+
+The first time, it sets up local testing with you. It looks through the repo for what it can work out, asks you about the rest (how to seed data, what catches outgoing email), tests each answer by running it, and writes the result to `docs/local-testing.md` along with any setup files. It leaves them uncommitted, like every file it changes. It commits, pushes, opens a PR or posts a comment only when you explicitly say yes to that step.
+
+Later runs read that guide, fix anything in it that's gone stale, and add whatever the sub-agents had to fix along the way, so the next run doesn't hit the same problem.
 
 ## License
 

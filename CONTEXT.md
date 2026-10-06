@@ -21,11 +21,15 @@ A role a person plays in the system, each seeing and allowed different things.
 _Avoid_: user type, actor
 
 **Case**:
-One check against a surface: a persona, an entry point, steps, and an expected result.
+One check against a surface: a persona, an entry point, steps, a given, and an expected result.
 _Avoid_: test, scenario
 
 **Expected**:
-The result a case should produce, inferred from the input and stated so a wrong inference is caught by reading. One the default branch would also produce checks nothing about the change.
+The result a case should produce: the change's claim, taken from the input, resting on app facts taken from code outside the change, the route table or the local testing guide — never recalled. Stated with its sources so a wrong inference is caught by reading. One the default branch would also produce checks nothing about the change.
+
+**Given**:
+The records a case needs before it can show anything — a pass over missing data proves nothing, so the case is unreached.
+_Avoid_: setup, fixture, precondition
 
 **Regression**:
 A case whose expected is behaviour the change must keep, rather than behaviour it adds.
