@@ -40,12 +40,12 @@ Surfaces:
 Data and gotchas:
 <the guide's Data and Gotchas>
 
-Walk every case. Work in <scratchpad>/<walker name>/ and the driver session <walker name>, closing only those. Tag every record you create with <walker name>-<run id> and remove the tagged ones when done. A case whose given is absent is unreached. Fix what blocks the walk — a stale flag, a broken seed — and leave the behaviour under test as found. Observe by text — DOM, eval, response bodies, CLI output — and look at a screenshot only to judge how something looks. A defect in what a case checks fails it, even where its expected is silent; Broken holds what lies outside.
+Walk every case. Work in <scratchpad>/<walker name>/ and the driver session <walker name>, closing only those. Tag every record you create with <walker name>-<run id> and remove the tagged ones when done. A case whose given is absent is unreached. Fix what blocks the walk — a stale flag, a broken seed — and leave the behaviour under test as found. Observe by text — DOM, eval, response bodies, CLI output — and look at a screenshot only to judge how something looks. A defect in what a case checks fails it, even where its expected is silent; anything outside is a broken item.
 
 Return exactly this, under 400 words, with <REDACTED> in place of every secret, quoting only the lines that show the behaviour:
 
 <case> — pass: <what you saw> | observed X, expected Y; steps: … | unreached: <blocker>
-Broken: <case — what looked broken along the way, or none>
+Broken items: <case — what looked broken outside the cases, or none>
 Fixes: <what was wrong → what repaired it, or none>
 ```
 
@@ -64,9 +64,9 @@ N cases across M personas: P pass, F fail, U unreached · B possibly broken by t
 
 ### Fail
 1. **C3, C7 <label, naming where it breaks>**
-   - **Observed:** <what went wrong, one short line>
+   - **Observed:** <the one fact that fails the case>
    - **Expected:** <one short line>
-   - **Steps:** <what a person does in the app to see it>
+   - **Steps:** <what a person does in the app to see it, with any condition it needs>
    - **Fix lead (unconfirmed):** <where> — <change>
 
 ### Unreached
@@ -74,14 +74,14 @@ N cases across M personas: P pass, F fail, U unreached · B possibly broken by t
 
 ### Looked broken along the way
 **Caused by this change**
-- C2 <what was seen, one sentence>
-  - **Next:** <one action>
+- **<what breaks, where>** · C2
+  - <proof the title can't hold, one short line>
 
 **Worth knowing**
-- C1 <what was seen, one sentence>
+- **<what happens, where>** · C1
 
 **Already there**
-- C4 <what was seen, one sentence>
+- **<what breaks, where>** · C4
 
 ### Spec
 - AC2 — C3 fail
@@ -97,9 +97,10 @@ N cases across M personas: P pass, F fail, U unreached · B possibly broken by t
 ```
 
 - Leave out empty groups and footer lines, and **Spec** or `No spec.`, whichever does not apply.
-- **Fail** holds an entry per cause, most serious first; cases sharing a cause share one, and a case failing for two causes sits in each. Code appears only in the fix lead.
-- **Looked broken along the way** holds what no failure already reports, in the report's voice: **Caused by this change** — the change caused it or may have, a line each, B counting them, an unverified cause becoming its next action; **Worth knowing** — harmless side effects of the change itself, environment fixes going to the guide and the footer; **Already there** — present before the change.
-- **Suggested next steps** lists, in order: a diagnosis per failure, naming its cases and what went wrong, a decision per broken item, a re-walk per unreached case once its reach lead is met, and — only with nothing failed — posting the report to the PR (`gh pr view` finds it) or ticket.
+- Describe what a person sees; file names, classes and properties appear only in fix leads.
+- **Fail** holds an entry per cause, most serious first; cases sharing a cause share one, and a case failing for two causes sits in each.
+- **Looked broken along the way** holds the broken items no failure already reports, in the report's voice, each with a proof line only when its title can't hold the proof: **Caused by this change** — the change caused it or may have, B counting them; **Worth knowing** — harmless side effects of the change itself, environment fixes going to the guide and the footer; **Already there** — present before the change.
+- **Suggested next steps** lists, in order: a diagnosis per failure, naming its cases and what went wrong, a decision or check per broken item caused by this change, a re-walk per unreached case once its reach lead is met, and — only with nothing failed — posting the report to the PR (`gh pr view` finds it) or ticket.
 
 Re-walk a case or fix the change only on the user's go-ahead, reporting a re-walk only from its walker's return.
 
