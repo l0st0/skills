@@ -62,7 +62,9 @@ Pass
 - C1 <label>: <what the walker saw>
 
 Fail
-1. C3, C7 <label>: observed <X>, expected <Y>.
+1. C3, C7 <label>
+   - Observed: <X>
+   - Expected: <Y>
    - Steps: <…>
    - Fix lead (unconfirmed): <where> — <change>
 
@@ -70,25 +72,31 @@ Unreached
 - C5 <label>: blocked by <…>; to reach: <…>
 
 Looked broken along the way
-- Caused by this change: <case> — <what> — next: <step>
-- Worth knowing: <case> — <what>
-- Already there: <case> — <what> · <case> — <what>
+Caused by this change
+- C2 <what>
+  - Next: <step>
+
+Worth knowing
+- C5 <what>
+
+Already there
+- C4 <what>
 
 Spec
 - AC2 — C3 fail
 - AC1, AC3–AC5 pass
 - AC6 unobservable — left to code review
 
-Next steps
+Suggested next steps
 1. Diagnose C3 <label> — observed <X>, expected <Y>
 
 Left changed: <files> (uncommitted) · guide: <sections touched, e.g. Gotchas +2, Surfaces ~1> · stopped: <servers, sessions>
 ```
 
 - Leave out empty groups, and **Spec** or `No spec.`, whichever does not apply. Mark a regression `(regression)`.
-- **Fail** holds an entry per cause, most serious first; cases sharing a cause share one.
+- **Fail** holds an entry per cause, most serious first; cases sharing a cause share one, and Steps holds only how to reproduce it.
 - **Looked broken along the way** holds what no failure already reports: **Caused by this change** — the change caused it or may have, a line each, B counting them; **Worth knowing** — harmless side effects of the change; **Already there** — present before the change.
-- **Next steps** offers, in order: a diagnosis per failure, naming its cases and what went wrong, a decision per broken item, a re-walk per unreached case once its reach lead is met, and — only with nothing failed — posting the report to the PR (`gh pr view` finds it) or ticket.
+- **Suggested next steps** lists, in order: a diagnosis per failure, naming its cases and what went wrong, a decision per broken item, a re-walk per unreached case once its reach lead is met, and — only with nothing failed — posting the report to the PR (`gh pr view` finds it) or ticket.
 
 Re-walk a case or fix the change only on the user's go-ahead, reporting a re-walk only from its walker's return.
 
