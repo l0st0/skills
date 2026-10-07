@@ -26,7 +26,7 @@ Done when the change runs on the **target** at the commit under test, every case
 
 ## 3. Dispatch the walkers
 
-Group the cases by persona — cases without one go to system walkers — and cut each group into batches no larger than the tightest Surfaces entry among them allows, five where the guide is silent, keeping one persona's cases that touch per-account state in the same batch. Each batch is one walker: a fresh sub-agent on a cheaper model than yours — `sonnet` in Claude Code, `luna` in Codex. Open the dispatch message on `N cases across M personas, W walkers.`, then one line per case — `C1 · persona · surface — what it walks` — under the IDs the verdict list reuses; givens, expecteds and sources stay in the walkers' briefs. Dispatch as many at once as every surface holds, and each queued walker as one frees up. Send each this brief, filled in and otherwise as written:
+Group the cases by persona — cases without one go to system walkers — and cut each group into batches no larger than the tightest Surfaces entry among them allows, five where the guide is silent, keeping one persona's cases that touch per-account state in the same batch. Each batch is one walker: a fresh sub-agent on a cheaper model than yours — `sonnet` in Claude Code, `luna` in Codex. Open the dispatch message on `N cases across M personas, W walkers.`, then one line per case — `C1 · persona · surface — what it walks` — under the IDs the **verdict list** reuses; givens, expecteds and sources stay in the walkers' briefs. Dispatch as many at once as every surface holds, and each queued walker as one frees up. Send each this brief, filled in and otherwise as written:
 
 ```
 You are <walker name>, walking as <persona>, signed in by <login>.
@@ -40,11 +40,11 @@ Surfaces:
 Data and gotchas:
 <the guide's Data and Gotchas>
 
-Walk every case. Work in <scratchpad>/<walker name>/ and the driver session <walker name>, closing only those. Tag every record you create with <walker name>-<run id> and remove the tagged ones when done. A case whose given is absent is unreached. Fix what blocks the walk — a stale flag, a broken seed — and leave the behaviour under test as found. Observe by text — DOM, eval, response bodies, CLI output — and look at a screenshot only to judge how something looks.
+Walk every case. Work in <scratchpad>/<walker name>/ and the driver session <walker name>, closing only those. Tag every record you create with <walker name>-<run id> and remove the tagged ones when done. A case whose given is absent is unreached. Fix what blocks the walk — a stale flag, a broken seed — and leave the behaviour under test as found. Observe by text — DOM, eval, response bodies, CLI output — and look at a screenshot only to judge how something looks. A defect in what a case checks fails it, even where its expected is silent; Broken holds what lies outside.
 
 Return exactly this, under 400 words, with <REDACTED> in place of every secret, quoting only the lines that show the behaviour:
 
-<case> — pass | observed X, expected Y; steps: … | unreached: <blocker>
+<case> — pass: <what you saw> | observed X, expected Y; steps: … | unreached: <blocker>
 Broken: <case — what looked broken along the way, or none>
 Fixes: <what was wrong → what repaired it, or none>
 ```
@@ -53,6 +53,43 @@ Done when the dispatch message opened with the case list and every case has one 
 
 ## 4. Report
 
-Open on `N cases across M personas: P pass, F fail, U unreached.`, ending it on `No spec.` when there is none, and put the **verdict list** directly under it, so the list carries the summary: each case's dispatch line led by its verdict and ending on what it covers, `(new)` on a change-only case and `; blocked: <blocker>` on an unreached one — `pass  C2 · persona · surface — what it walked → what it covers (new)` — failed and unreached cases first, then new, then regressions. With a spec, a line per criterion follows it — `AC2 — C2 pass, C3 pass`, or unobservable. Then failed cases as observed versus expected with steps; then what looked broken along the way, each naming the case it surfaced in, whether the change caused it or it predates the change, and its next step — a re-walk where the walker left it unconfirmed, a ticket, or none; then every environment fix. Offer once to post the lists to the PR or ticket. Fold each environment fix into the guide — a new Gotchas entry, or a correction to the entry it disproved, removing what the fix made obsolete — tighten a surface's limits where walkers collided on it or left cases unwalked, and list the files the run leaves changed. Offer to diagnose each failed case, its steps serving as the reproduction; re-walk a case or fix the change only on the user's go-ahead, reporting a re-walk only from its walker's return. Last, stop every server, worktree and driver session the run started, leaving what was already running.
+Fold each environment fix into the guide — a new Gotchas entry, or a correction to the entry it disproved, removing what the fix made obsolete — and tighten a surface's limits where walkers collided on it or left cases unwalked. Stop every server, worktree and driver session the run started, leaving what was already running. Then report exactly this, the Pass, Fail and Unreached groups forming the **verdict list**:
 
-Done when every case has one line in the verdict list, every broken item names its case, cause and next step, every fix appears once and is in the guide, and nothing the run started still runs.
+```
+N cases across M personas: P pass, F fail, U unreached · B possibly broken by this change. No spec.
+
+Pass
+- C1 <label>: <what the walker saw>
+
+Fail
+1. C3, C7 <label>: observed <X>, expected <Y>.
+   - Steps: <…>
+   - Fix lead (unconfirmed): <where> — <change>
+
+Unreached
+- C5 <label>: blocked by <…>; to reach: <…>
+
+Looked broken along the way
+- Caused by this change: <case> — <what> — next: <step>
+- Worth knowing: <case> — <what>
+- Already there: <case> — <what> · <case> — <what>
+
+Spec
+- AC2 — C3 fail
+- AC1, AC3–AC5 pass
+- AC6 unobservable — left to code review
+
+Next steps
+1. Diagnose C3 <label> — observed <X>, expected <Y>
+
+Left changed: <files> (uncommitted) · guide: <sections touched, e.g. Gotchas +2, Surfaces ~1> · stopped: <servers, sessions>
+```
+
+- Leave out empty groups, and **Spec** or `No spec.`, whichever does not apply. Mark a regression `(regression)`.
+- **Fail** holds an entry per cause, most serious first; cases sharing a cause share one.
+- **Looked broken along the way** holds what no failure already reports: **Caused by this change** — the change caused it or may have, a line each, B counting them; **Worth knowing** — harmless side effects of the change; **Already there** — present before the change.
+- **Next steps** offers, in order: a diagnosis per failure, naming its cases and what went wrong, a decision per broken item, a re-walk per unreached case once its reach lead is met, and — only with nothing failed — posting the report to the PR (`gh pr view` finds it) or ticket.
+
+Re-walk a case or fix the change only on the user's go-ahead, reporting a re-walk only from its walker's return.
+
+Done when the report matches the template, every case has exactly one entry in the verdict list, every failure carries a fix lead and every unreached case a reach lead, every environment fix is in the guide, and nothing the run started still runs.
