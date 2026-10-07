@@ -30,7 +30,7 @@ Give it a spec, a PR, a branch, or a one-line description. It then:
 1. Writes test cases, each with an expected result, the persona it runs as, and where the result is checked.
 2. Gets the change running locally, seeds data, and signs in.
 3. Sends sub-agents on a cheaper model to walk the cases in parallel. Each one takes a batch of one persona's cases.
-4. Reports every case as pass, failed (what it saw next to what it expected), or unreached (what blocked it). If you gave it a spec, the report ends with a table of each acceptance criterion and its result.
+4. Reports every case as pass, failed (what it saw next to what it expected), or unreached (what blocked it), and ends on a table of every case: what it walked, the persona, what it covers and its result. If you gave it a spec, a table of each acceptance criterion and its result follows.
 
 ## The first run
 
