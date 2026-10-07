@@ -43,8 +43,12 @@ The outcome of one case — exactly one of pass, observed-vs-expected, or unreac
 _Avoid_: result, status
 
 **Verdict list**:
-The list the report opens with, one line per case: verdict, case, persona, surface, what it walked, what it covers.
+The Pass, Fail and Unreached groups of the report, each case under its verdict by ID and a short label.
 _Avoid_: verdict table, results table, summary table
+
+**Broken item**:
+Something a walker saw outside what its cases check, reported apart from the verdicts as caused by the change, worth knowing, or already there.
+_Avoid_: bug, finding, issue
 
 **Unobservable**:
 An acceptance criterion no surface can show, left to code review alone.
