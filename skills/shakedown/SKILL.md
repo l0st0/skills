@@ -42,7 +42,7 @@ Done when every case has all its fields, every app fact cites a source, every ex
 
 ## 2. Prepare the target
 
-`docs/local-testing.md` records how the project runs locally for testing, in five sections: Run, Personas, Data, Surfaces and Gotchas. If it's missing, write it as [local-testing-guide.md](local-testing-guide.md) says. If it's present, follow it, repair any fact that fails and report the repair; a repair that reverses a decision recorded there goes to the user first.
+`docs/local-testing.md` records how the project runs locally for testing, in five sections: Run, Personas, Data, Surfaces and Gotchas. If it's missing, write it as [local-testing-guide.md](local-testing-guide.md) says. If it's present, follow it, repair any fact that fails, and cut every entry that fails the guide's test, reporting each repair and cut; one that reverses a decision recorded there goes to the user first.
 
 The change under test stays as written. A case reachable only by changing app code, or only with a driver this machine lacks, is **unreached**, naming what it needs.
 
@@ -68,7 +68,7 @@ Surfaces:
 <the guide's entries for the surfaces these cases use>
 
 Data and gotchas:
-<the guide's Data and Gotchas>
+<the guide's Data, and its Gotchas for these surfaces or for every walker>
 
 Walk every case. Work in <scratchpad>/<walker name>/ and the driver session <walker name>, closing only those. Tag every record you create with <walker name>-<run id> and remove the tagged ones when done. A case whose given is absent is unreached. Fix what blocks the walk — a stale flag, a broken seed — and leave the behaviour under test as found. Observe by text — DOM, eval, response bodies, CLI output — and look at a screenshot only to judge how something looks. A defect in what a case checks fails it, even where its expected is silent; anything outside is a broken item.
 
@@ -95,10 +95,10 @@ Done when every case has one **verdict**: pass, fail or unreached.
   - **Caused by this change**: the change caused it or may have, and someone needs to decide on it.
   - **Worth knowing**: the change caused it and nothing needs deciding.
   - **Already there**: shown to predate the change, on the default branch or by `git blame` on the code behind it.
-- **Guide**: fold each environment fix in, as a new Gotchas entry or a correction to the entry it disproved, removing what the fix made obsolete. Tighten a surface's limits where walkers collided on it or left cases unwalked.
+- **Guide**: fold in each environment fix that passes the guide's test, as a new Gotchas entry or a correction to the entry it disproved, removing what the fix made obsolete. A fix that fails the test stays in the details file. Tighten a surface's limits where walkers collided on it or left cases unwalked.
 - **Cleanup**: stop every server, worktree and driver session the run started, servers by PID or port and sessions by their own names, leaving what was already running. Another session may be running the same app beside you.
 
-Done when every fail's evidence holds, every fail has a fix lead, every broken item sits in a group, every environment fix is in the guide, and nothing the run started still runs.
+Done when every fail's evidence holds, every fail has a fix lead, every broken item sits in a group, every environment fix that passes the guide's test is in it, and nothing the run started still runs.
 
 ## 5. Report
 
@@ -147,7 +147,7 @@ N cases across M personas: P pass, F fail, U unreached · B possibly broken by t
 
 - **Details:** <path> — ask about any number for steps, evidence and a fix lead.
 - **Left changed:** <files this run changed> (uncommitted)
-- **Guide:** <each entry added or corrected>
+- **Guide:** <each entry added, corrected or cut>
 - **Stopped:** <servers, sessions>
 ```
 
