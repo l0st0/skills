@@ -42,5 +42,9 @@ _Avoid_: tester, runner, prober
 The outcome of one case — exactly one of pass, observed-vs-expected, or unreached.
 _Avoid_: result, status
 
+**Verdict table**:
+The table the report ends on, one row per case: what it walked, persona, what it covers, verdict.
+_Avoid_: results table, summary table
+
 **Unobservable**:
 An acceptance criterion no surface can show, left to code review alone.
