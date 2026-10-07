@@ -12,7 +12,7 @@ The last gate after code review: the diff was read, now the built thing runs. Yo
 
 Take the first input that applies: the spec or ticket — passed in, or referenced from the branch's commits — the PR, the branch diff against the default branch, a sentence; with none, ask what to test. Name the **personas** the change touches, in the project's glossary terms, every persona when unclear.
 
-Each **case** carries a persona, a **surface**, an entry point, steps, a **given** — the records it needs to show anything — and an **expected**, and names the criterion or diff hunk it covers; only an app-wide criterion sweeps every screen, endpoint or form factor. The surface is the one the persona uses — the app's interface for people, API or CLI for developers — dropping to stored data, messages or logs only when the criterion is about them or nothing higher shows it. With a spec, every acceptance criterion maps to cases or is **unobservable**.
+Each **case** is numbered C1 to CN, without gaps, and carries a persona, a **surface**, an entry point, steps, a **given** — the records it needs to show anything — and an **expected**, and names the criterion or diff hunk it covers; only an app-wide criterion sweeps every screen, endpoint or form factor. The surface is the one the persona uses — the app's interface for people, API or CLI for developers — dropping to stored data, messages or logs only when the criterion is about them or nothing higher shows it. With a spec, every acceptance criterion maps to cases or is **unobservable**.
 
 The expected's claim comes from the input; each app fact under it — a route, a param, a breakpoint, when a form validates, what a form factor hides — from code outside the diff, the route table or the local testing guide, cited. Each expected is one only the change produces, or the case is a **regression**: behaviour the change must keep.
 
@@ -26,7 +26,7 @@ Done when the change runs on the **target** at the commit under test, every case
 
 ## 3. Dispatch the walkers
 
-Group the cases by persona — cases without one go to system walkers — and cut each group into batches no larger than the tightest Surfaces entry among them allows, five where the guide is silent, keeping one persona's cases that touch per-account state in the same batch. Each batch is one walker: a fresh sub-agent on a cheaper model than yours — `sonnet` in Claude Code, `luna` in Codex. Open the dispatch message with the cases as a table — persona, surface, given, expected, sources. Dispatch as many at once as every surface holds, and each queued walker as one frees up. Send each this brief, filled in and otherwise as written:
+Group the cases by persona — cases without one go to system walkers — and cut each group into batches no larger than the tightest Surfaces entry among them allows, five where the guide is silent, keeping one persona's cases that touch per-account state in the same batch. Each batch is one walker: a fresh sub-agent on a cheaper model than yours — `sonnet` in Claude Code, `luna` in Codex. Open the dispatch message on `N cases across M personas, W walkers.`, then one line per case — `C1 · persona · surface — what it walks` — under the IDs the verdict list reuses; givens, expecteds and sources stay in the walkers' briefs. Dispatch as many at once as every surface holds, and each queued walker as one frees up. Send each this brief, filled in and otherwise as written:
 
 ```
 You are <walker name>, walking as <persona>, signed in by <login>.
@@ -45,14 +45,14 @@ Walk every case. Work in <scratchpad>/<walker name>/ and the driver session <wal
 Return exactly this, under 400 words, with <REDACTED> in place of every secret, quoting only the lines that show the behaviour:
 
 <case> — pass | observed X, expected Y; steps: … | unreached: <blocker>
-Broken: <what looked broken along the way, or none>
+Broken: <case — what looked broken along the way, or none>
 Fixes: <what was wrong → what repaired it, or none>
 ```
 
-Done when the dispatch message opened with the table and every case has one **verdict**.
+Done when the dispatch message opened with the case list and every case has one **verdict**.
 
 ## 4. Report
 
-Open on `N cases across M personas: P pass, F fail, U unreached.`, then failed cases as observed versus expected with steps, then what looked broken along the way, then every environment fix. End on the **verdict table**, one row per case — what it walked, persona, what it covers, verdict — and with a spec, a table of each criterion against its verdicts or unobservable after it, offering once to post both to the PR or ticket. Fold each environment fix into the guide — a new Gotchas entry, or a correction to the entry it disproved, removing what the fix made obsolete — tighten a surface's limits where walkers collided on it or left cases unwalked, and list the files changed. Offer to diagnose each failed case, its steps serving as the reproduction; re-walk a case or fix the change only on the user's go-ahead, reporting a re-walk only from its walker's return. Last, stop every server, worktree and driver session the run started, leaving what was already running.
+Open on `N cases across M personas: P pass, F fail, U unreached.`, ending it on `No spec.` when there is none, and put the **verdict list** directly under it, so the list carries the summary: each case's dispatch line led by its verdict and ending on what it covers, `(new)` on a change-only case and `; blocked: <blocker>` on an unreached one — `pass  C2 · persona · surface — what it walked → what it covers (new)` — failed and unreached cases first, then new, then regressions. With a spec, a line per criterion follows it — `AC2 — C2 pass, C3 pass`, or unobservable. Then failed cases as observed versus expected with steps; then what looked broken along the way, each naming the case it surfaced in, whether the change caused it or it predates the change, and its next step — a re-walk where the walker left it unconfirmed, a ticket, or none; then every environment fix. Offer once to post the lists to the PR or ticket. Fold each environment fix into the guide — a new Gotchas entry, or a correction to the entry it disproved, removing what the fix made obsolete — tighten a surface's limits where walkers collided on it or left cases unwalked, and list the files the run leaves changed. Offer to diagnose each failed case, its steps serving as the reproduction; re-walk a case or fix the change only on the user's go-ahead, reporting a re-walk only from its walker's return. Last, stop every server, worktree and driver session the run started, leaving what was already running.
 
-Done when every case has one row in the verdict table, every fix appears once and is in the guide, and nothing the run started still runs.
+Done when every case has one line in the verdict list, every broken item names its case, cause and next step, every fix appears once and is in the guide, and nothing the run started still runs.
