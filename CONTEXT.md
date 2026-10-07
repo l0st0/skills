@@ -43,7 +43,7 @@ The outcome of one case — exactly one of pass, observed-vs-expected, or unreac
 _Avoid_: result, status
 
 **Verdict list**:
-The list the report opens with, grouped by verdict in the order pass, fail, unreached, naming each case by ID and a short label. Each pass names what the walker saw; each unreached case carries a reach lead, each failed case its evidence and a fix lead.
+The Pass, Fail and Unreached groups of the report, each case under its verdict by ID and a short label.
 _Avoid_: verdict table, results table, summary table
 
 **Unobservable**:

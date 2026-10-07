@@ -12,11 +12,11 @@ The last gate after code review: the diff was read, now the built thing runs. Yo
 
 Take the first input that applies: the spec or ticket — passed in, or referenced from the branch's commits — the PR, the branch diff against the default branch, a sentence; with none, ask what to test. Name the **personas** the change touches, in the project's glossary terms, every persona when unclear.
 
-Each **case** is numbered C1 to CN, without gaps, and carries a persona, a **surface**, an entry point, steps, a **given** — the records it needs to show anything — and an **expected**, and names the criterion or diff hunk it covers; only an app-wide criterion sweeps every screen, endpoint or form factor. The surface is the one the persona uses — the app's interface for people, API or CLI for developers — dropping to stored data, messages or logs only when the criterion is about them or nothing higher shows it. With a spec, every acceptance criterion maps to cases or is **unobservable**.
+Each **case** is numbered C1 to CN, without gaps, and carries a persona, a **surface**, an entry point, steps, a **given** — the records it needs to show anything — and an **expected**, and names the criterion or diff hunk it covers; only an app-wide criterion sweeps every screen, endpoint or form factor. The surface is the one the persona uses — the app's interface for people, API or CLI for developers — dropping to stored data, messages or logs only when the criterion is about them or nothing higher shows it. With a spec, every acceptance criterion maps to cases or is **unobservable**; without one, every diff hunk that changes behaviour maps to cases the same way.
 
 The expected's claim comes from the input; each app fact under it — a route, a param, a breakpoint, when a form validates, what a form factor hides — from code outside the diff, the route table or the local testing guide, cited. Each expected is one only the change produces, or the case is a **regression**: behaviour the change must keep.
 
-Done when every case carries all six and what it covers, every app fact cites a source, every expected is change-only or a regression, and every criterion is mapped; an app fact no source settles goes to the user before dispatch.
+Done when every case carries all six and what it covers, every app fact cites a source, every expected is change-only or a regression, and every criterion or behaviour-changing hunk is mapped; an app fact no source settles goes to the user before dispatch.
 
 ## 2. Load the local testing guide
 
@@ -59,13 +59,14 @@ Fold each environment fix into the guide — a new Gotchas entry, or a correctio
 N cases across M personas: P pass, F fail, U unreached · B possibly broken by this change. No spec.
 
 Pass
-- C1 <label>: <what the walker saw>
+- C1 <label>: <what the walker saw, one sentence>
+- C4 <label> (regression): <what the walker saw, one sentence>
 
 Fail
 1. C3, C7 <label>
-   - Observed: <X>
+   - Observed: <what went wrong, with measurements>
    - Expected: <Y>
-   - Steps: <…>
+   - Steps: <how to reproduce>
    - Fix lead (unconfirmed): <where> — <change>
 
 Unreached
@@ -77,7 +78,7 @@ Caused by this change
   - Next: <step>
 
 Worth knowing
-- C5 <what>
+- C1 <what>
 
 Already there
 - C4 <what>
@@ -88,16 +89,16 @@ Spec
 - AC6 unobservable — left to code review
 
 Suggested next steps
-1. Diagnose C3 <label> — observed <X>, expected <Y>
+1. Diagnose C3, C7 <label> — observed <X>, expected <Y>
 
-Left changed: <files> (uncommitted) · guide: <sections touched, e.g. Gotchas +2, Surfaces ~1> · stopped: <servers, sessions>
+Left changed: <files> (uncommitted) · guide: <each entry added or corrected> · stopped: <servers, sessions>
 ```
 
-- Leave out empty groups, and **Spec** or `No spec.`, whichever does not apply. Mark a regression `(regression)`.
-- **Fail** holds an entry per cause, most serious first; cases sharing a cause share one, and Steps holds only how to reproduce it.
-- **Looked broken along the way** holds what no failure already reports: **Caused by this change** — the change caused it or may have, a line each, B counting them; **Worth knowing** — harmless side effects of the change; **Already there** — present before the change.
+- Leave out empty groups, and **Spec** or `No spec.`, whichever does not apply.
+- **Fail** holds an entry per cause, most serious first; cases sharing a cause share one.
+- **Looked broken along the way** holds what no failure already reports: **Caused by this change** — the change caused it or may have, a line each, B counting them; **Worth knowing** — harmless side effects of the change itself, environment fixes going to the guide and the footer; **Already there** — present before the change.
 - **Suggested next steps** lists, in order: a diagnosis per failure, naming its cases and what went wrong, a decision per broken item, a re-walk per unreached case once its reach lead is met, and — only with nothing failed — posting the report to the PR (`gh pr view` finds it) or ticket.
 
 Re-walk a case or fix the change only on the user's go-ahead, reporting a re-walk only from its walker's return.
 
-Done when the report matches the template, every case has exactly one entry in the verdict list, every failure carries a fix lead and every unreached case a reach lead, every environment fix is in the guide, and nothing the run started still runs.
+Done when the report matches the template, every case has exactly one entry in the verdict list, every environment fix is in the guide, and nothing the run started still runs.
