@@ -58,47 +58,49 @@ Fold each environment fix into the guide — a new Gotchas entry, or a correctio
 ```
 N cases across M personas: P pass, F fail, U unreached · B possibly broken by this change. No spec.
 
-Pass
+### Pass
 - C1 <label>: <what the walker saw, one sentence>
 - C4 <label> (regression): <what the walker saw, one sentence>
 
-Fail
-1. C3, C7 <label>
-   - Observed: <what went wrong, with measurements>
-   - Expected: <Y>
-   - Steps: <how to reproduce>
-   - Fix lead (unconfirmed): <where> — <change>
+### Fail
+1. **C3, C7 <label, naming where it breaks>**
+   - **Observed:** <what went wrong, one short line>
+   - **Expected:** <one short line>
+   - **Steps:** <what a person does in the app to see it>
+   - **Fix lead (unconfirmed):** <where> — <change>
 
-Unreached
+### Unreached
 - C5 <label>: blocked by <…>; to reach: <…>
 
-Looked broken along the way
-Caused by this change
-- C2 <what>
-  - Next: <step>
+### Looked broken along the way
+**Caused by this change**
+- C2 <what was seen, one sentence>
+  - **Next:** <one action>
 
-Worth knowing
-- C1 <what>
+**Worth knowing**
+- C1 <what was seen, one sentence>
 
-Already there
-- C4 <what>
+**Already there**
+- C4 <what was seen, one sentence>
 
-Spec
+### Spec
 - AC2 — C3 fail
 - AC1, AC3–AC5 pass
 - AC6 unobservable — left to code review
 
-Suggested next steps
+### Suggested next steps
 1. Diagnose C3, C7 <label> — observed <X>, expected <Y>
 
-Left changed: <files> (uncommitted) · guide: <each entry added or corrected> · stopped: <servers, sessions>
+- **Left changed:** <files this run changed> (uncommitted)
+- **Guide:** <each entry added or corrected>
+- **Stopped:** <servers, sessions>
 ```
 
-- Leave out empty groups, and **Spec** or `No spec.`, whichever does not apply.
-- **Fail** holds an entry per cause, most serious first; cases sharing a cause share one.
-- **Looked broken along the way** holds what no failure already reports: **Caused by this change** — the change caused it or may have, a line each, B counting them; **Worth knowing** — harmless side effects of the change itself, environment fixes going to the guide and the footer; **Already there** — present before the change.
+- Leave out empty groups and footer lines, and **Spec** or `No spec.`, whichever does not apply.
+- **Fail** holds an entry per cause, most serious first; cases sharing a cause share one, and a case failing for two causes sits in each. Code appears only in the fix lead.
+- **Looked broken along the way** holds what no failure already reports, in the report's voice: **Caused by this change** — the change caused it or may have, a line each, B counting them, an unverified cause becoming its next action; **Worth knowing** — harmless side effects of the change itself, environment fixes going to the guide and the footer; **Already there** — present before the change.
 - **Suggested next steps** lists, in order: a diagnosis per failure, naming its cases and what went wrong, a decision per broken item, a re-walk per unreached case once its reach lead is met, and — only with nothing failed — posting the report to the PR (`gh pr view` finds it) or ticket.
 
 Re-walk a case or fix the change only on the user's go-ahead, reporting a re-walk only from its walker's return.
 
-Done when the report matches the template, every case has exactly one entry in the verdict list, every environment fix is in the guide, and nothing the run started still runs.
+Done when the report matches the template, every case has exactly one verdict, every environment fix is in the guide, and nothing the run started still runs.
