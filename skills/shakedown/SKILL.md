@@ -142,11 +142,6 @@ N cases across M personas: P pass, F fail, U unreached · B possibly broken by t
 - AC1, AC3–AC5 pass
 - AC6 unobservable — not checked by running
 
-### Suggested next steps
-1. Diagnose 1, <its title>
-
-- **Details:** <path> — ask about any number for steps, evidence and a fix lead.
-- **Left changed:** <files this run changed> (uncommitted)
 - **Guide:** <each entry added, corrected or cut>
 - **Stopped:** <servers, sessions>
 ```
@@ -154,10 +149,10 @@ N cases across M personas: P pass, F fail, U unreached · B possibly broken by t
 - Leave out empty groups and footer lines, and **Spec** or `No spec.`, whichever does not apply.
 - Write for someone who hasn't seen the code: what a person sees, in plain units (px, "on phones"), with file names, classes, breakpoint names and design tokens kept to the details.
 - **Fail** holds an entry per cause, most serious first; cases sharing a cause share one, and a case failing for two causes sits in each. Each of its three lines is one short line: the title says what goes wrong, Should what ought to happen, and Where only the place and the condition to reach it.
+- An entry ends at its Where line. The cause, the fix lead, whether the case itself was wrong, what predates the change and which walkers saw it all go to the details file: a paragraph under the entry makes the reader weigh your diagnosis before they've decided the entry matters, and the group it sits in already says whether it's this change's.
 - **Looked broken along the way** uses the groups from step 4, each item in the Fail shape, numbered on from the failures so every entry has its own number. B counts **Caused by this change**.
-- **Suggested next steps** lists, in order: a diagnosis per failure by its number; a decision or check per item caused by this change; a re-walk per unreached case once its blocker is cleared; and, only with nothing failed, posting the report to the PR (`gh pr view` finds it) or ticket. A posted report carries the details with it, since its readers can't ask.
 
-Done when the details file holds every failure's observed, expected, steps, evidence and fix lead; the report matches the template; every Fail and broken-item entry is three short lines cut down from a walker's return; and every case has exactly one verdict.
+Done when the details file holds every failure's observed, expected, steps, evidence and fix lead; the report matches the template, with nothing after any entry's Where line; every Fail and broken-item entry is three short lines cut down from a walker's return; and every case has exactly one verdict.
 
 When the user asks about a numbered entry, answer from the details file.
 
