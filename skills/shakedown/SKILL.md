@@ -6,7 +6,7 @@ disable-model-invocation: true
 
 # Shakedown
 
-The last gate after code review: the diff was read, now the built thing runs. You derive the cases, prepare the target, check what comes back and write the report; walkers walk.
+The last gate after code review and `/minesweep`: the diff was read, now the built thing runs. You derive the cases, prepare the target, check what comes back and write the report; walkers walk.
 
 Every file you change stays uncommitted for the user to review. Commit, push, open a PR or post only on a yes that names that action: those reach past this machine, and a general "ok" approves nothing out there.
 
