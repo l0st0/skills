@@ -42,7 +42,7 @@ Done when every case has all its fields, every app fact cites a source, every ex
 
 ## 2. Prepare the target
 
-`docs/local-testing.md` records how the project runs locally for testing, in five sections: Run, Personas, Data, Surfaces and Gotchas. If it's missing, write it as [local-testing-guide.md](local-testing-guide.md) says. If it's present, follow it, repair any fact that fails, and cut every entry that fails the guide's test, reporting each repair and cut; one that reverses a decision recorded there goes to the user first.
+`docs/local-testing.md` records how the project runs locally for testing, in five sections: Run, Personas, Data, Surfaces and Gotchas. A guide that outgrew one file is a `docs/local-testing/` folder: a `README.md` index and one file per section. Read the index and the files the cases need, never the whole folder. If it's missing, write it as [local-testing-guide.md](local-testing-guide.md) says. If it's present, follow it, repair any fact that fails, and cut every entry that fails the guide's test, reporting each repair and cut; one that reverses a decision recorded there goes to the user first.
 
 The change under test stays as written. A case reachable only by changing app code, or only with a driver this machine lacks, is **unreached**, naming what it needs.
 
@@ -95,7 +95,7 @@ Done when every case has one **verdict**: pass, fail or unreached.
   - **Caused by this change**: the change caused it or may have, and someone needs to decide on it.
   - **Worth knowing**: the change caused it and nothing needs deciding.
   - **Already there**: shown to predate the change, on the default branch or by `git blame` on the code behind it.
-- **Guide**: fold in each environment fix that passes the guide's test, as a new Gotchas entry or a correction to the entry it disproved, removing what the fix made obsolete. A fix that fails the test stays in the details file. Tighten a surface's limits where walkers collided on it or left cases unwalked.
+- **Guide**: keep guide edits out of any fix's commit, and list them in the report as their own change. Fold in each environment fix that passes the guide's test, as a new Gotchas entry or a correction to the entry it disproved, removing what the fix made obsolete. A fix that fails the test stays in the details file. Tighten a surface's limits where walkers collided on it or left cases unwalked.
 - **Cleanup**: stop every server, worktree and driver session the run started, servers by PID or port and sessions by their own names, leaving what was already running. Another session may be running the same app beside you.
 
 Done when every fail's evidence holds, every fail has a fix lead, every broken item sits in a group, every environment fix that passes the guide's test is in it, and nothing the run started still runs.
