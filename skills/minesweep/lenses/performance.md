@@ -4,7 +4,7 @@ Flag only what the diff itself shows. A performance finding names the input that
 
 ## Backend
 
-- **N+1**: a query, fetch or API call inside a loop over rows. Fetch the relation in the same query, or batch.
+- **N+1** queries, fetches or API calls.
 - **Unbounded reads**: a list query or endpoint with no limit, or a stable order missing under pagination. Every collection the user can grow is bounded.
 - **Query shape vs indexes**: a new filter, join or sort on a column with no index behind it, on a table that grows. Suggest the index and the plan check (`EXPLAIN`) that would confirm it.
 - **Work on the request path** that belongs elsewhere: a heavy computation, a slow third-party call awaited before the response, sequential awaits that could run in parallel.
@@ -12,7 +12,7 @@ Flag only what the diff itself shows. A performance finding names the input that
 
 ## Frontend
 
-- **Waterfalls**: data loaded in a child after its parent loaded, when the route's loader could fetch both at once.
+- **Waterfalls**: a fetch that waits on an earlier one it does not depend on.
 - **Bundle**: a new heavy dependency imported on a route that does not need it up front; it belongs behind a lazy boundary.
 - **Images**: missing `width`/`height` (layout shift), the largest above-the-fold image loaded lazily, unoptimized formats or sizes.
 - **Renders**: a large list rendered without windowing, or new objects and functions created in render and passed to memoized children, where the diff shows that list or child.
