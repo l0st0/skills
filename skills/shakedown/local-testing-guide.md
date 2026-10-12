@@ -3,7 +3,7 @@
 `docs/local-testing.md` records how the project runs locally for testing. Every run reads it and every walker's brief carries its Data and Gotchas, so each line costs every future run: it holds only what the next walker, on any change, needs and can't read off the repo. Every entry says how to run or observe the app, never what it should do, in these five sections and no others:
 
 - **Run** — how the change gets onto the target at the commit under test and starts there, on ports, devices or simulators, build output and app data no other session shares, so walkers and the user's own dev server never collide.
-- **Personas** — each role and how it signs in, credentials as env var names unless the literal is already committed in a seed.
+- **Personas** — each role and how it signs in, credentials as env var names unless the literal is already committed in a seed. When agents can't read the env file (a permission deny), say how a walker signs in without it: an emailed code, or a disposable login with a password it sets itself.
 - **Data** — the seed or reset command, how walkers keep records apart, and every store and external service the target writes to.
 - **Surfaces** — how a walker drives and observes each, how many walkers it holds at once, and how many cases one walker gets through on it; a third-party service through a local stand-in, or else a request spy.
 - **Gotchas** — what no config confesses, each opening on the surface it bites (`**Browser**:`) unless it bites every walker, since a walker's brief carries only its own surfaces' gotchas.
@@ -16,7 +16,7 @@ An entry earns its place when leaving it out would cost a walker on an unrelated
 - **The tool, not the project**: shell quoting, a driver or simulator flag, a command the OS lacks. It holds on every project, so it belongs to the tool's own docs.
 - **History and reasons**: when an entry was proven, which PR moved it, why it is so. Keep a reason only when it changes what the walker does.
 
-Each entry is one or two sentences: the command or the fact. A helper longer than a few lines is a script in the repo the guide names.
+Each entry is one or two sentences: the command or the fact. A helper longer than a few lines is a script in the repo the guide names. Past about 15 KB, split the guide into a `docs/local-testing/` folder, with a `README.md` index saying when to read each section's file.
 
 Sweep the repo for facts, then settle each open decision with the user in rounds — one question each, with your recommendation. Setup changes config, env and scripts; secrets stay out of tracked files. Prove every entry by running it, write the guide, and point at it from `CLAUDE.md` or `AGENTS.md`.
 
