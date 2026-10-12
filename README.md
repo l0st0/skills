@@ -5,22 +5,18 @@ Two skills for checking a change once it's written:
 - `minesweep` reads the diff for what the change makes possible that nobody intended: security holes, breaking changes for code that's still running, slow paths, weakened checks.
 - `shakedown` runs the app and checks that the change works wherever it shows up: the interface, the API, the database.
 
-Each one runs only when you type `/minesweep` or `/shakedown`. The agent never starts one on its own.
+Each one runs only when you type `/minesweep` or `/shakedown` (`$minesweep` or `$shakedown` in Codex). The agent never starts one on its own.
 
 ## Where they fit
 
-They pick up after `/code-review` from [Matt Pocock's skills](https://github.com/mattpocock/skills). Code review checks the diff against the repo's standards and the spec. Minesweep looks for what the change breaks or opens up beyond that, and shakedown runs it.
-
-```
-/code-review → /minesweep → /shakedown
-```
+Run them after code review; each works on its own. Code review checks the diff against the repo's standards and the spec. Minesweep looks for what the change breaks or opens up beyond that, and shakedown runs it.
 
 ## Install
 
 Any agent, via the [skills CLI](https://skills.sh):
 
 ```sh
-npx skills add l0st0/skills
+npx skills add l0st0/skills -g
 ```
 
 Claude Code, as a plugin:
@@ -57,7 +53,7 @@ Give it a spec, a PR, a branch, or a one-line description. It then:
 4. Checks every failure against the evidence the sub-agent quoted and reads the code for a likely fix. It also checks whether anything else that looked broken was already broken before the change.
 5. Reports each case as passed, failed or unreached.
 
-A failure gets three short lines: what's wrong, what should happen, and where to see it. An unreached case says what blocked it and how to reach it. After the cases come other things that looked broken along the way and, if you gave it a spec, where each acceptance criterion stands. Steps, evidence and a fix lead for every entry go to a separate details file; ask about any numbered entry to see them.
+A failure gets three short lines: what's wrong, what should happen, and where to see it. An unreached case says what blocked it and how to reach it. After the cases come other things that looked broken along the way and, when there's a spec, where each acceptance criterion stands. Steps, evidence and a fix lead for every entry go to a separate details file; ask about any numbered entry to see them.
 
 Shakedown's sub-agents need a way to drive each place the change shows up: an automation skill or MCP server for the app's interface, or the project's own end-to-end test harness.
 
@@ -65,7 +61,7 @@ Shakedown's sub-agents need a way to drive each place the change shows up: an au
 
 The first time, it sets up local testing with you. It looks through the repo for what it can work out, asks you about the rest (how to seed data, what catches outgoing email), tests each answer by running it, and writes the result to `docs/local-testing.md` along with any setup files. It leaves them uncommitted, like every file it changes. It commits, pushes, opens a PR or posts a comment only when you explicitly say yes to that step.
 
-Later runs read that guide, fix anything in it that's gone stale, and add whatever the sub-agents had to fix along the way, so the next run doesn't hit the same problem.
+Later runs read that guide, fix anything in it that's gone stale, and add the sub-agents' fixes that a run on any change would need, so the next run doesn't hit the same problem.
 
 ## License
 

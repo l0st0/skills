@@ -1,10 +1,8 @@
 # Doubt lens: adversarial review of the riskiest claim
 
-The author of a change shares its blind spots. A reviewer that sees only the artifact and the contract, never the author's reasoning, catches what the author argued themselves past.
-
 ## 1. Claim
 
-Write, for yourself, the one decision in the diff whose failure costs most, in two or three lines: what holds, and why it matters if it does not. If no claim can be written that compactly, pick the hunk that touches the highest-stakes asset. The claim stays with you.
+Write, for yourself only, the one decision in the diff whose failure costs most, in two or three lines: what holds, and why it matters if it does not. If no claim can be written that compactly, pick the hunk that touches the highest-stakes asset.
 
 ## 2. Extract
 
@@ -24,8 +22,8 @@ Dispatch one fresh subagent with this prompt, followed by the artifact and contr
 The reviewer lacks context, so its output is evidence, not verdict. Re-read the artifact against each issue and classify it, first match wins:
 
 1. **Contract misread**: the contract you wrote was unclear. Fix the contract; if the issue survives a corrected contract, re-dispatch once.
-2. **Real**: report it at the severity [brief.md](brief.md) defines.
-3. **Accepted trade-off**: real, but costlier to fix than to carry. Report it as `consider`, stating the trade-off.
+2. **Accepted trade-off**: real, but costlier to fix than to carry. Report it as `consider`, stating the trade-off.
+3. **Real**: report it at the severity [brief.md](brief.md) defines.
 4. **Noise**: correct under context the reviewer lacked. Drop it.
 
 One cycle, plus at most one re-dispatch for a corrected contract. If substantive issues remain, report them; more cycles are the user's call.

@@ -1,14 +1,15 @@
 ---
 name: shakedown
-description: Run a finished change on every surface it touches with parallel walkers, and report what it actually does.
+description: Run a finished change on every surface it touches and report what it actually does.
 disable-model-invocation: true
+license: MIT
 ---
 
 # Shakedown
 
-The last gate after code review and `/minesweep`: the diff was read, now the built thing runs. You derive the cases, prepare the target, check what comes back and write the report; walkers walk.
+The last gate after code review: the diff was read, now the built thing runs. Walkers walk the cases; the rest is yours.
 
-Every file you change stays uncommitted for the user to review. Commit, push, open a PR or post only on a yes that names that action: those reach past this machine, and a general "ok" approves nothing out there.
+Every file you change stays uncommitted for the user to review. Commit, push, open a PR or post only on a yes that names that action; a general "ok" approves none of them. Guide edits go in a commit of their own.
 
 ## 1. Derive the cases
 
@@ -17,7 +18,7 @@ Take the first input that exists:
 1. what the user passed: a spec, ticket, PR or sentence
 2. a spec or ticket referenced from the branch's commits
 3. the branch's PR
-4. the branch diff against the default branch
+4. the **diff** of the branch against the default branch, uncommitted edits included
 
 With none, ask what to test. The user's words set the scope, so a spec found on the branch supplies expecteds only for what they named.
 
@@ -42,15 +43,15 @@ Done when every case has all its fields, every app fact cites a source, every ex
 
 ## 2. Prepare the target
 
-`docs/local-testing.md` records how the project runs locally for testing, in five sections: Run, Personas, Data, Surfaces and Gotchas. A guide that outgrew one file is a `docs/local-testing/` folder: a `README.md` index and one file per section. Read the index and the files the cases need, never the whole folder. If it's missing, write it as [local-testing-guide.md](local-testing-guide.md) says. If it's present, follow it, repair any fact that fails, and cut every entry that fails the guide's test, reporting each repair and cut; one that reverses a decision recorded there goes to the user first.
+`docs/local-testing.md` records how the project runs locally for testing. A guide that outgrew one file is a `docs/local-testing/` folder: read its `README.md` index and the files the cases need. [local-testing-guide.md](local-testing-guide.md) sets the guide's sections and when an entry **earns its place**: read it before you write, prune or add to the guide. If the guide is missing, write it as that file says. If it's present, follow it, repair any fact that fails, and cut every entry that doesn't earn its place; a repair or cut that reverses a decision recorded there goes to the user first.
 
 The change under test stays as written. A case reachable only by changing app code, or only with a driver this machine lacks, is **unreached**, naming what it needs.
 
-Done when the change runs on the **target** at the commit under test, every case's given exists, every surface the cases need answers, every persona can sign in, and every store and service the target writes to is local or a stand-in. A target writing to production stops the run for the user.
+Done when the working tree, uncommitted edits included, holds the change and runs on the **target**, every case's given exists, every surface the cases need answers, every persona can sign in, every store and service the target writes to is local or a stand-in, and every guide entry you read earns its place. A target writing to production stops the run for the user.
 
 ## 3. Dispatch the walkers
 
-Pick a **run id**, the short commit hash and the time (`a1b2c3d-1432`). Walkers tag their records with it, which keeps their data apart and lets cleanup find it.
+Pick a **run id**, the short commit hash and the time (`a1b2c3d-1432`). Walkers tag their records with it, which keeps their data apart and lets cleanup find it. `<scratchpad>` is a directory outside the repo: your session's scratch directory if it has one, else a fresh temp directory.
 
 Group the cases by persona; cases without one go to system walkers. Cut each group into batches no larger than the tightest Surfaces limit among them, five where the guide is silent. Keep a persona's cases that change per-account state in one batch, since two walkers on one account overwrite each other.
 
@@ -90,21 +91,21 @@ Done when every case has one **verdict**: pass, fail or unreached.
 ## 4. Check what came back
 
 - **Fails**: confirm each one's quoted evidence shows the observed and contradicts the expected. Walkers run on a cheaper model, and a false fail costs the user a diagnosis. Evidence that doesn't hold goes to one fresh walker; still unsettled, the case is unreached, naming what stays unclear.
-- **Fix leads**: for each confirmed fail, read the code the case touches and name where it breaks and the change that would fix it. It stays unconfirmed.
+- **Fix leads**: for each confirmed fail and broken item, read the code behind it and name where it breaks and the change that would fix it. It stays unconfirmed.
 - **Broken items**: sort each one the verdicts don't already report into one group:
   - **Caused by this change**: the change caused it or may have, and someone needs to decide on it.
   - **Worth knowing**: the change caused it and nothing needs deciding.
   - **Already there**: shown to predate the change, on the default branch or by `git blame` on the code behind it.
-- **Guide**: keep guide edits out of any fix's commit, and list them in the report as their own change. Fold in each environment fix that passes the guide's test, as a new Gotchas entry or a correction to the entry it disproved, removing what the fix made obsolete. A fix that fails the test stays in the details file. Tighten a surface's limits where walkers collided on it or left cases unwalked.
+- **Guide**: fold in each environment fix that earns its place, as a new Gotchas entry or a correction to the entry it disproved, removing what the fix made obsolete. Tighten a surface's limits where walkers collided on it or left cases unwalked.
 - **Cleanup**: stop every server, worktree and driver session the run started, servers by PID or port and sessions by their own names, leaving what was already running. Another session may be running the same app beside you.
 
-Done when every fail's evidence holds, every fail has a fix lead, every broken item sits in a group, every environment fix that passes the guide's test is in it, and nothing the run started still runs.
+Done when every fail's evidence holds, every fail and broken item has a fix lead, every broken item sits in a group, every environment fix that earns its place is in the guide, and nothing the run started still runs.
 
 ## 5. Report
 
-Write the details first, to `<scratchpad>/shakedown-<run id>.md`: per failure its observed, expected, steps a person takes to see it, evidence and fix lead; per pass what the walker saw; per broken item its proof and fix lead; then every walker's return. The report stays short because the details are one question away, even after the walker returns have left your context.
+Write the details first, to `<scratchpad>/shakedown-<run id>.md`: per failure its observed, expected, steps a person takes to see it, evidence and fix lead; per broken item its proof and fix lead; then every walker's return. The report stays short because the details are one question away, even after the walker returns have left your context.
 
-Then report exactly this; the Pass, Fail and Unreached groups form the **verdict list**:
+Then report exactly this:
 
 ```
 N cases across M personas: P pass, F fail, U unreached · B possibly broken by this change. No spec.
@@ -148,11 +149,11 @@ N cases across M personas: P pass, F fail, U unreached · B possibly broken by t
 
 - Leave out empty groups and footer lines, and **Spec** or `No spec.`, whichever does not apply.
 - Write for someone who hasn't seen the code: what a person sees, in plain units (px, "on phones"), with file names, classes, breakpoint names and design tokens kept to the details.
-- **Fail** holds an entry per cause, most serious first; cases sharing a cause share one, and a case failing for two causes sits in each. Each of its three lines is one short line: the title says what goes wrong, Should what ought to happen, and Where only the place and the condition to reach it.
+- **Fail** holds an entry per cause, most serious first; cases sharing a cause share one, and a case failing for two causes sits in each.
 - An entry ends at its Where line. The cause, the fix lead, whether the case itself was wrong, what predates the change and which walkers saw it all go to the details file: a paragraph under the entry makes the reader weigh your diagnosis before they've decided the entry matters, and the group it sits in already says whether it's this change's.
-- **Looked broken along the way** uses the groups from step 4, each item in the Fail shape, numbered on from the failures so every entry has its own number. B counts **Caused by this change**.
+- Number the broken items on from the failures, so every entry has its own number. B counts **Caused by this change**.
 
-Done when the details file holds every failure's observed, expected, steps, evidence and fix lead; the report matches the template, with nothing after any entry's Where line; every Fail and broken-item entry is three short lines cut down from a walker's return; and every case has exactly one verdict.
+Done when the details file holds every failure's observed, expected, steps, evidence and fix lead; the report holds only the template's lines, tally first and footer last, with nothing after any entry's Where line; every Fail and broken-item entry is three short lines cut down from a walker's return; and every case has exactly one verdict.
 
 When the user asks about a numbered entry, answer from the details file.
 
