@@ -1,0 +1,9 @@
+{
+  "$schema": "https://unpkg.com/@changesets/config@4.0.1/schema.json",
+  "changelog": ["@changesets/changelog-github", { "repo": "l0st0/skills" }],
+  "commit": false,
+  "privatePackages": true,
+  "access": "restricted",
+  "baseBranch": "main",
+  "format": false
+}

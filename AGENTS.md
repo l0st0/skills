@@ -1,3 +1,3 @@
 The same tree ships two ways: the [skills CLI](https://skills.sh), which reads `skills/*/SKILL.md` directly, and as a Claude Code plugin via `.claude-plugin/`.
 
-A release bumps `version` in `.claude-plugin/plugin.json`: plugin installs update only when it changes.
+Releases run through [Changesets](https://changesets.dev). A PR that changes what users get (a skill, its scripts, the plugin manifest, install steps) adds a changeset under `.changeset/`; see `.changeset/README.md`. Never bump `version` by hand: the release workflow's "chore: version skills" PR bumps `package.json` and `.claude-plugin/plugin.json` together, and plugin installs update only when that version changes. Merging it tags `vX.Y.Z` and publishes the GitHub release.

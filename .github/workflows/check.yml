@@ -1,0 +1,15 @@
+name: Check
+
+on:
+  pull_request:
+
+jobs:
+  check:
+    name: Plugin version
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v7
+
+      - name: Check plugin.json matches package.json
+        run: node scripts/sync-plugin-version.mjs --check
