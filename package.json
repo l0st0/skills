@@ -1,0 +1,20 @@
+{
+  "name": "l0st0-skills",
+  "version": "0.4.0",
+  "private": true,
+  "description": "Agent skills for checking a finished change",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/l0st0/skills"
+  },
+  "license": "MIT",
+  "scripts": {
+    "changeset": "changeset",
+    "version": "changeset version && node scripts/sync-plugin-version.mjs && npm install --package-lock-only",
+    "check-plugin-version": "node scripts/sync-plugin-version.mjs --check"
+  },
+  "devDependencies": {
+    "@changesets/changelog-github": "^1.0.1",
+    "@changesets/cli": "^3.0.3"
+  }
+}
