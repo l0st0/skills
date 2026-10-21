@@ -15,7 +15,9 @@ Every file you change stays uncommitted for the user to review. Commit, push or 
 
 ## 1. Baseline
 
-The **scope** is what the user named (a package, a directory, a pattern), else every test in the repo.
+The **scope** is what the user named (a package, a directory, a pattern, or a **change** since a fixed point: a branch, tag or commit), else every test in the repo.
+
+For a change, the diff is `git diff $(git merge-base <fixed point> HEAD)` plus untracked files, and the scope is the tests it adds or whose body it edits. The other tests in those files stay as they are. When the diff adds or edits no test, there is nothing to prune: say so and stop.
 
 From the agent instructions, manifests and CI config, find:
 
@@ -26,11 +28,12 @@ From the agent instructions, manifests and CI config, find:
 Then, on the tree as you found it, for each package in scope:
 
 - write the **before list** to `<scratchpad>/before.txt`: one test ID per line in the runner's own format, prefixed with the package path when there are several. A table test (`it.each`) lists as one ID, and is cut or kept whole;
+- write the **scope list** to `<scratchpad>/scope.txt`: the before list's IDs that are in scope, which for a package, directory or pattern is all of them;
 - run the suite as CI does, recording test count, wall time and every failing test: the **baseline failures**;
 - run the gate and record what fails;
 - when the repo has a coverage command, run it and keep the per-file report.
 
-Done when every package in scope has its before list, count, wall time, baseline failures and gate result, and every file that names tests by path is noted.
+Done when every package in scope has its before list, scope list, count, wall time, baseline failures and gate result, and every file that names tests by path is noted.
 
 ## 2. Rubric
 
@@ -42,7 +45,7 @@ Done when every documented guard you found is under Repo keeps, and the sensitiv
 
 ## 3. Classify
 
-Split the test files in scope into batches of about 1,500 lines, keeping each file whole. Each batch is one **classifier**: a fresh sub-agent on the cheapest model tier (Haiku, on Claude) at medium reasoning effort, since the rubric carries the judgement. A file under a sensitive path goes to two classifiers in different batches, so their verdicts are independent. Dispatch as many at once as the harness allows. Without sub-agents, classify each batch yourself, in turn, from the same brief.
+Split the test files holding the scope list's IDs into batches of about 1,500 lines, keeping each file whole. Each batch is one **classifier**: a fresh sub-agent on the cheapest model tier (Haiku, on Claude) at medium reasoning effort, since the rubric carries the judgement. A file under a sensitive path goes to two classifiers in different batches, so their verdicts are independent. Dispatch as many at once as the harness allows. Without sub-agents, classify each batch yourself, in turn, from the same brief.
 
 Send each this brief, filled in and otherwise as written:
 
@@ -53,7 +56,9 @@ Repo: <repo root>. Files:
 <paths>
 
 Test IDs, in the form your verdicts must use:
-<these files' lines from before.txt>
+<these files' lines from scope.txt>
+
+Judge only these IDs. The files' other tests are context.
 
 Return one JSON line per test ID above, every one, and nothing else:
 {"id": "<test ID>", "verdict": "cut|keep|deflake|rewrite", "class": "<rubric class>", "reason": "<what its failure would catch, or why nothing>", "fix": "<for deflake or rewrite: the change>"}
@@ -61,7 +66,7 @@ Return one JSON line per test ID above, every one, and nothing else:
 
 A return missing IDs, or naming IDs it wasn't given, sends the missing IDs to one fresh classifier; IDs still missing after that are keep. A test two classifiers judged is cut only when both say cut; a disagreement goes to review. Merge the verdicts into `<scratchpad>/verdicts.jsonl`, one line per ID.
 
-Done when [scripts/check-cut.sh](scripts/check-cut.sh) `classified <before> <ids>`, given the IDs from `verdicts.jsonl` one per line, exits 0.
+Done when [scripts/check-cut.sh](scripts/check-cut.sh) `classified <scope> <ids>`, given the IDs from `verdicts.jsonl` one per line, exits 0.
 
 ## 4. Review
 

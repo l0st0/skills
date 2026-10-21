@@ -84,7 +84,7 @@ Later runs read the guide and fix anything in it that's gone stale. When a sub-a
 
 ## Prune tests
 
-Give it a package or a directory, or nothing for the whole repo. It then:
+Give it a package, a directory, or a branch or commit to prune only the tests your change adds or edits. Give it nothing and it prunes the whole repo. It then:
 
 1. Records the suite as it stands: every test's ID, the time it takes, and what already fails.
 2. Hands the test files to sub-agents on a cheaper model, which mark each test against one rubric. Files that hold auth, money, data or concurrency code get two independent passes, and a test there goes only when both agree.
