@@ -2,14 +2,14 @@
 
 Three skills. Two check a change after you've written it:
 
-- `minesweep` reads the diff for side effects nobody intended: security holes, changes that break code still running, slow paths, weakened checks.
-- `shakedown` runs the app and checks that the change works everywhere it shows up: the interface, the API, the database.
+- `check-side-effects` reads the diff for side effects nobody intended: security holes, changes that break code still running, slow paths, weakened checks.
+- `try-every-surface` runs the app and checks that the change works everywhere it shows up: the interface, the API, the database.
 
 The third, `prune-tests`, cuts the tests that cost CI time and catch nothing.
 
-None of them starts on its own. Type `/minesweep`, `/shakedown` or `/prune-tests` to run one (`$minesweep`, `$shakedown` or `$prune-tests` in Codex).
+None of them starts on its own. Type `/check-side-effects`, `/try-every-surface` or `/prune-tests` to run one (`$check-side-effects`, `$try-every-surface` or `$prune-tests` in Codex).
 
-Run minesweep and shakedown after code review. Code review checks the diff against the repo's standards and the spec. Minesweep looks for what the change breaks or opens up beyond that, and shakedown runs it. Each works without the other.
+Run `check-side-effects` and `try-every-surface` after code review. Code review checks the diff against the repo's standards and the spec. `check-side-effects` looks for what the change breaks or opens up beyond that, and `try-every-surface` runs it. Each works without the other.
 
 ## Install
 
@@ -26,7 +26,7 @@ Claude Code, as a plugin:
 /plugin install l0st0-skills@l0st0
 ```
 
-## Minesweep
+## Check side effects
 
 Give it a commit or branch to compare against. Without one, it compares against the point where your branch left the default branch, uncommitted work included.
 
@@ -37,7 +37,7 @@ It always checks whether the change lowered a bar: a silenced linter or type err
 - Performance, when it adds queries, list endpoints, caching or heavy client dependencies.
 - Doubt, when a mistake would be expensive: authorization, money, deletion, concurrency, migrating live data.
 
-Each check runs as its own sub-agent, all in parallel. Minesweep then checks every finding against the code and drops the ones that are wrong, already handled elsewhere, or accepted by a decision written down in the repo.
+Each check runs as its own sub-agent, all in parallel. It then checks every finding against the code and drops the ones that are wrong, already handled elsewhere, or accepted by a decision written down in the repo.
 
 The report has three parts:
 
@@ -47,9 +47,9 @@ The report has three parts:
 
 It changes no code until you pick fixes, for example "fix 1–3". If any of them needs a decision from you, it asks all those questions at once before editing. Then it reruns the repo's own checks.
 
-The checks adapt material from Addy Osmani's [agent-skills](https://github.com/addyosmani/agent-skills). See [NOTICE.md](skills/minesweep/NOTICE.md).
+The checks adapt material from Addy Osmani's [agent-skills](https://github.com/addyosmani/agent-skills). See [NOTICE.md](skills/check-side-effects/NOTICE.md).
 
-## Shakedown
+## Try every surface
 
 Give it a spec, a PR, a branch or a one-line description. It then:
 
@@ -71,7 +71,7 @@ Steps, evidence and a lead on the fix for every entry go to a separate details f
 
 ### The first run
 
-The first time, shakedown sets up local testing with you:
+The first time, it sets up local testing with you:
 
 1. It works out what it can from the repo.
 2. It asks you about the rest, such as how to seed data or what catches outgoing email.
@@ -80,7 +80,7 @@ The first time, shakedown sets up local testing with you:
 
 Every file it changes stays uncommitted. It commits, pushes, opens a PR or posts a comment only when you explicitly say yes to that step.
 
-Later runs read the guide and fix anything in it that's gone stale. When a sub-agent had to fix something that would block a run on any change, shakedown adds that fix to the guide so the next run doesn't hit the same problem.
+Later runs read the guide and fix anything in it that's gone stale. When a sub-agent had to fix something that would block a run on any change, it adds that fix to the guide so the next run doesn't hit the same problem.
 
 ## Prune tests
 

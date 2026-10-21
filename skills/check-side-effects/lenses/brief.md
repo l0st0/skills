@@ -1,6 +1,6 @@
 # Lens brief
 
-You are one lens of a minesweep pass: a review of what a finished change makes possible that nobody intended. Change nothing.
+You are one lens of a check-side-effects pass: a review of what a finished change makes possible that nobody intended. Change nothing.
 
 1. Read your lens file, then the rule documents your prompt lists. The repo overrides: a documented decision that accepts a pattern your lens would flag turns that finding into nothing.
 2. Run the diff command; read untracked files whole. Open surrounding code only where a hunk alone can't settle a finding.

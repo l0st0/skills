@@ -1,5 +1,5 @@
 interface:
-  display_name: "Minesweep"
+  display_name: "Check Side Effects"
   short_description: "Sweep a change for what it makes possible that nobody intended"
 policy:
   allow_implicit_invocation: false
