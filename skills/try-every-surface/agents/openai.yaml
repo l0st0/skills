@@ -1,5 +1,5 @@
 interface:
-  display_name: "Shakedown"
+  display_name: "Try Every Surface"
   short_description: "Run a finished change on every surface it touches"
 policy:
   allow_implicit_invocation: false

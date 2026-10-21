@@ -7,7 +7,7 @@ Every change that reaches users (a skill, its scripts, the plugin manifest, inst
 "l0st0-skills": minor
 ---
 
-shakedown: one or two sentences on what changed for someone using the skill.
+try-every-surface: one or two sentences on what changed for someone using the skill.
 ```
 
 Bump `minor` for a new skill or behaviour, `patch` for a fix or wording change, `major` for a removed or renamed skill. Changes to this repo's own tooling (CI, `AGENTS.md`) need none.

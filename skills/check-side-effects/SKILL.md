@@ -1,11 +1,11 @@
 ---
-name: minesweep
+name: check-side-effects
 description: "Sweep a finished change for what it makes possible that nobody intended: security holes, breaking changes, slow paths, weakened checks."
 disable-model-invocation: true
 license: MIT
 ---
 
-# Minesweep
+# Check side effects
 
 Code review asks whether the change follows the standards and the spec; this pass asks what the change makes possible that nobody intended.
 

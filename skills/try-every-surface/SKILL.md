@@ -1,11 +1,11 @@
 ---
-name: shakedown
+name: try-every-surface
 description: Run a finished change on every surface it touches and report what it actually does.
 disable-model-invocation: true
 license: MIT
 ---
 
-# Shakedown
+# Try every surface
 
 The last gate after code review: the diff was read, now the built thing runs. Walkers walk the cases; the rest is yours.
 
@@ -103,7 +103,7 @@ Done when every fail's evidence holds, every fail and broken item has a fix lead
 
 ## 5. Report
 
-Write the details first, to `<scratchpad>/shakedown-<run id>.md`: per failure its observed, expected, steps a person takes to see it, evidence and fix lead; per broken item its proof and fix lead; then every walker's return. The report stays short because the details are one question away, even after the walker returns have left your context.
+Write the details first, to `<scratchpad>/try-every-surface-<run id>.md`: per failure its observed, expected, steps a person takes to see it, evidence and fix lead; per broken item its proof and fix lead; then every walker's return. The report stays short because the details are one question away, even after the walker returns have left your context.
 
 Then report exactly this:
 
