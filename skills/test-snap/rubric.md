@@ -43,5 +43,3 @@ Before you cut a mirror or smoke test, search the rest of the test tree for anot
 Keep. A wrong keep costs seconds of CI; a wrong cut costs the bug it would have caught.
 
 ## Repo keeps
-
-<!-- Filled in per run: each test the repo documents as a guard, and where it says so. -->

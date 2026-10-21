@@ -1,13 +1,17 @@
 #!/usr/bin/env bash
 # Check the test-ID lists of a test-snap run. Each file holds one test ID per line.
-# Usage:
-#   check-cut.sh classified <before> <ids>        every ID in before has exactly one verdict
-#   check-cut.sh applied <before> <after> <cut>   after = before - cut, exactly
 # Exits 0 when the check holds, 1 when it fails, 2 on bad usage.
 set -euo pipefail
 export LC_ALL=C
 
-usage() { sed -n '3,5p' "$0" | sed 's/^# //'; exit 2; }
+usage() {
+  cat >&2 <<'EOF'
+Usage:
+  check-cut.sh classified <before> <ids>        every ID in before has exactly one verdict
+  check-cut.sh applied <before> <after> <cut>   after = before - cut, exactly
+EOF
+  exit 2
+}
 ids() { tr -d '\r' < "$1" | { grep -v '^[[:space:]]*$' || true; } | sort -u; }
 dups() { tr -d '\r' < "$1" | { grep -v '^[[:space:]]*$' || true; } | sort | uniq -d; }
 count() { ids "$1" | wc -l | tr -d ' '; }
