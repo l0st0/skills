@@ -2,7 +2,7 @@
   "name": "l0st0-skills",
   "version": "0.4.0",
   "private": true,
-  "description": "Agent skills for checking a finished change",
+  "description": "Agent skills for checking a finished change and trimming the test suite",
   "repository": {
     "type": "git",
     "url": "https://github.com/l0st0/skills"

@@ -1,0 +1,5 @@
+interface:
+  display_name: "Test Snap"
+  short_description: "Cut the low-signal tests from a suite"
+policy:
+  allow_implicit_invocation: false

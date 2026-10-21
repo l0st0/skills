@@ -1,13 +1,15 @@
 # skills
 
-Two skills that check a change after you've written it:
+Three skills. Two check a change after you've written it:
 
 - `minesweep` reads the diff for side effects nobody intended: security holes, changes that break code still running, slow paths, weakened checks.
 - `shakedown` runs the app and checks that the change works everywhere it shows up: the interface, the API, the database.
 
-Neither one starts on its own. Type `/minesweep` or `/shakedown` to run it (`$minesweep` or `$shakedown` in Codex).
+The third, `test-snap`, cuts the tests that cost CI time and catch nothing.
 
-Run them after code review. Code review checks the diff against the repo's standards and the spec. Minesweep looks for what the change breaks or opens up beyond that, and shakedown runs it. Each works without the other.
+None of them starts on its own. Type `/minesweep`, `/shakedown` or `/test-snap` to run one (`$minesweep`, `$shakedown` or `$test-snap` in Codex).
+
+Run minesweep and shakedown after code review. Code review checks the diff against the repo's standards and the spec. Minesweep looks for what the change breaks or opens up beyond that, and shakedown runs it. Each works without the other.
 
 ## Install
 
@@ -79,6 +81,25 @@ The first time, shakedown sets up local testing with you:
 Every file it changes stays uncommitted. It commits, pushes, opens a PR or posts a comment only when you explicitly say yes to that step.
 
 Later runs read the guide and fix anything in it that's gone stale. When a sub-agent had to fix something that would block a run on any change, shakedown adds that fix to the guide so the next run doesn't hit the same problem.
+
+## Test snap
+
+Give it a package or a directory, or nothing for the whole repo. It then:
+
+1. Records the suite as it stands: every test's ID, the time it takes, and what already fails.
+2. Hands the test files to sub-agents on a cheaper model, which mark each test against one rubric. Files that hold auth, money, data or concurrency code get two independent passes, and a test there goes only when both agree.
+3. Rereads the risky verdicts itself: every cut in that code, every cut for timing (a test on a fake clock isn't flaky), and every test that names a bug.
+4. Shows you the tally and waits. Say up front that you don't need to review it, and it goes on.
+5. Deletes the cut tests and whatever only they used: helpers, fixtures, and paths in CI and docs.
+6. Checks the result: the test list shrank by exactly the cut list, the repo's checks fail only where they failed before, and bugs it plants in the code the cut tests ran are still caught.
+
+It cuts tests of what the types already guarantee, constants, the framework, mocks called in the order the code calls them, smoke tests, duplicate table rows, and tests that wait on real time or assert a duration. It keeps tests of auth and permissions, data, money, external formats, domain logic, concurrency fixes, past bugs, what users see or screen readers announce, and any test the repo documents as a guard.
+
+A flaky test that guards something real stays and goes on a fix list with its deterministic replacement. So does a mock-heavy test that is the only one to catch a bug on its path. It works through the list when you ask. Behaviour that no test catches, before or after the cut, is reported as a gap.
+
+The report doubles as the PR body, and nothing is committed until you say so.
+
+The approach follows a [T3 Code PR](https://github.com/pingdotgg/t3code/pull/22557) that cut 11,000 of its 26,000 tests.
 
 ## License
 
