@@ -5,9 +5,9 @@ Three skills. Two check a change after you've written it:
 - `minesweep` reads the diff for side effects nobody intended: security holes, changes that break code still running, slow paths, weakened checks.
 - `shakedown` runs the app and checks that the change works everywhere it shows up: the interface, the API, the database.
 
-The third, `test-snap`, cuts the tests that cost CI time and catch nothing.
+The third, `prune-tests`, cuts the tests that cost CI time and catch nothing.
 
-None of them starts on its own. Type `/minesweep`, `/shakedown` or `/test-snap` to run one (`$minesweep`, `$shakedown` or `$test-snap` in Codex).
+None of them starts on its own. Type `/minesweep`, `/shakedown` or `/prune-tests` to run one (`$minesweep`, `$shakedown` or `$prune-tests` in Codex).
 
 Run minesweep and shakedown after code review. Code review checks the diff against the repo's standards and the spec. Minesweep looks for what the change breaks or opens up beyond that, and shakedown runs it. Each works without the other.
 
@@ -82,7 +82,7 @@ Every file it changes stays uncommitted. It commits, pushes, opens a PR or posts
 
 Later runs read the guide and fix anything in it that's gone stale. When a sub-agent had to fix something that would block a run on any change, shakedown adds that fix to the guide so the next run doesn't hit the same problem.
 
-## Test snap
+## Prune tests
 
 Give it a package or a directory, or nothing for the whole repo. It then:
 

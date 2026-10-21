@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Check the test-ID lists of a test-snap run. Each file holds one test ID per line.
+# Check the test-ID lists of a prune-tests run. Each file holds one test ID per line.
 # Exits 0 when the check holds, 1 when it fails, 2 on bad usage.
 set -euo pipefail
 export LC_ALL=C

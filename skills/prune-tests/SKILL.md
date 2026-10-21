@@ -1,11 +1,11 @@
 ---
-name: test-snap
+name: prune-tests
 description: Cut the low-signal tests from a suite so CI runs faster and flakes less, keeping every test that guards real behaviour.
 disable-model-invocation: true
 license: MIT
 ---
 
-# Test snap
+# Prune tests
 
 A suite grows until much of it guards nothing: tests that no real bug turns red, or that only bugs the gate already catches do. They cost CI minutes and flakes. This pass cuts them by [rubric.md](rubric.md) and keeps every test that guards real behaviour.
 
@@ -124,7 +124,7 @@ Done when the list check exits 0, the gate and suite fail only where the baselin
 
 ## 7. Report
 
-Write the details to `<scratchpad>/test-snap-<run id>.md`, the run id being the short commit hash and the time (`a1b2c3d-1432`): every cut grouped by file with class and reason, every restored test, the fix list, the gap list, the planted bugs and which tests turned red on each, and the after numbers per package.
+Write the details to `<scratchpad>/prune-tests-<run id>.md`, the run id being the short commit hash and the time (`a1b2c3d-1432`): every cut grouped by file with class and reason, every restored test, the fix list, the gap list, the planted bugs and which tests turned red on each, and the after numbers per package.
 
 Then report exactly this, which doubles as the PR body:
 
