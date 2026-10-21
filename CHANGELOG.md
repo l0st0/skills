@@ -1,5 +1,11 @@
 # l0st0-skills
 
+## 1.0.1
+
+### Patch Changes
+
+- [#24](https://github.com/l0st0/skills/pull/24) [`2d40dce`](https://github.com/l0st0/skills/commit/2d40dce4202a4423b5ddb22c50007e24b3e07932) Thanks [@l0st0](https://github.com/l0st0)! - prune-tests: name a branch, tag or commit to prune only the tests the change since then adds or edits, such as before opening a PR.
+
 ## 1.0.0
 
 ### Major Changes
