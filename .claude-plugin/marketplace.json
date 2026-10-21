@@ -4,7 +4,7 @@
     "name": "l0st0"
   },
   "metadata": {
-    "description": "Agent skills for checking a finished change"
+    "description": "Agent skills for checking a finished change and trimming the test suite"
   },
   "plugins": [
     {
