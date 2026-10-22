@@ -10,11 +10,12 @@
   "license": "MIT",
   "scripts": {
     "changeset": "changeset",
-    "version": "changeset version && node scripts/sync-plugin-version.mjs && npm install --package-lock-only",
+    "version": "changeset version && node scripts/sync-plugin-version.mjs && pnpm install --lockfile-only",
     "check-plugin-version": "node scripts/sync-plugin-version.mjs --check"
   },
   "devDependencies": {
     "@changesets/changelog-github": "^1.0.1",
     "@changesets/cli": "^3.0.3"
-  }
+  },
+  "packageManager": "pnpm@12.14.0"
 }
