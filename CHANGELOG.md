@@ -1,5 +1,11 @@
 # l0st0-skills
 
+## 1.1.0
+
+### Minor Changes
+
+- [#27](https://github.com/l0st0/skills/pull/27) [`2fbf56f`](https://github.com/l0st0/skills/commit/2fbf56ffece05baedf8348b07dc06e5d729409c1) Thanks [@l0st0](https://github.com/l0st0)! - prune-tests: a scope of five tests or fewer is classified in one pass by the running agent instead of dispatching classifier sub-agents, so pruning a small change before a PR costs far fewer tokens.
+
 ## 1.0.1
 
 ### Patch Changes

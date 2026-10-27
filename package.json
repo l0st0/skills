@@ -1,6 +1,6 @@
 {
   "name": "l0st0-skills",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "private": true,
   "description": "Agent skills for checking a finished change and trimming the test suite",
   "repository": {
