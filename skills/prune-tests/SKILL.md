@@ -47,6 +47,8 @@ Done when every documented guard you found is under Repo keeps, and the sensitiv
 
 Split the test files holding the scope list's IDs into batches of about 1,500 lines, keeping each file whole. Each batch is one **classifier**: a fresh sub-agent on the cheapest model tier (Haiku, on Claude) at medium reasoning effort, since the rubric carries the judgement. A file under a sensitive path goes to two classifiers in different batches, so their verdicts are independent. Dispatch as many at once as the harness allows. Without sub-agents, classify each batch yourself, in turn, from the same brief.
 
+A scope list of five IDs or fewer skips the batches: classify them yourself in one pass from the same brief, since a classifier reads whole files and the code under test whatever the count. Step 4 still rereads every verdict other than keep under a sensitive path.
+
 Send each this brief, filled in and otherwise as written:
 
 ```
