@@ -47,7 +47,7 @@ Done when every documented guard you found is under Repo keeps, and the sensitiv
 
 Split the test files holding the scope list's IDs into batches of about 1,500 lines, keeping each file whole. Each batch is one **classifier**: a fresh sub-agent on the cheapest model tier (Haiku, on Claude) at medium reasoning effort, since the rubric carries the judgement. A file under a sensitive path goes to two classifiers in different batches, so their verdicts are independent. Dispatch as many at once as the harness allows. Without sub-agents, classify each batch yourself, in turn, from the same brief.
 
-A scope list of five IDs or fewer skips the batches: classify them yourself in one pass from the same brief, since a classifier reads whole files and the code under test whatever the count. Step 4 still rereads every verdict other than keep under a sensitive path.
+A scope list of five IDs or fewer skips the batches: classify them yourself in one pass from the same brief, since a classifier reads whole files and the code under test whatever the count. Step 4 still rereads them.
 
 Send each this brief, filled in and otherwise as written:
 
@@ -78,6 +78,7 @@ Classifiers run on a cheaper model, and their mistakes cluster where a test look
 - every wall-clock and real-time cut: confirm it waits on real time rather than a controlled clock, and check what its other assertions guard, since the timing may be the only low-signal part;
 - every cut whose title or nearby comment names a bug, issue or incident;
 - every cut mirror or smoke test, and every rewrite, against the rubric's rule for rewrites;
+- every cut obsolete test: confirm the code it names is gone and nothing outside the repo still reaches that name;
 - five cuts per remaining class, picked across packages; one wrong verdict there sends you through the whole class.
 
 Flip each verdict you overturn and mark it **restored**, naming what the test guards. The deflakes and rewrites form the **fix list**, and every gap a verdict's reason names starts the **gap list**.
