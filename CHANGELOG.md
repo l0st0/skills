@@ -1,5 +1,11 @@
 # l0st0-skills
 
+## 1.2.0
+
+### Minor Changes
+
+- [#30](https://github.com/l0st0/skills/pull/30) [`3209a3a`](https://github.com/l0st0/skills/commit/3209a3a80c96ec7da8e0ea22e1404c4a32fee710) Thanks [@l0st0](https://github.com/l0st0)! - prune-tests: cuts tests that only assert removed or moved code is gone (a new **obsolete** class), counts assertions on private state, call order and mocks of the unit under test as **mirror**, and puts a test whose expected value repeats the code's own formula on the fix list with the literal to pin.
+
 ## 1.1.0
 
 ### Minor Changes
