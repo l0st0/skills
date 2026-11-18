@@ -37,9 +37,9 @@ With a spec, every acceptance criterion maps to cases or is **unobservable**: no
 
 Defects cluster at the **edges**. Where the change accepts, compares or renders a value, add cases at its edges: the boundary itself and either side of it, empty, malformed, impossible (a 30 February), and markup or other characters the surface treats specially. Where the change touches code that guards access, add a regression case for who must still be refused.
 
-The expected's claim comes from the input. Each app fact under it (a route, a param, a breakpoint, when a form validates, what a form factor hides) comes from code outside the diff, the route table or the local testing guide, and cites that source, so a wrong inference is caught by reading. Each expected is one only the change produces, since one the default branch also produces passes either way. The exception is a **regression** case: behaviour the change must keep, marked as one.
+The expected's claim comes from the input. Each app fact under it (a route, a param, a breakpoint, when a form validates, what a form factor hides) comes from code outside the diff, the route table or the local testing guide, and cites that source, so a wrong inference is caught by reading. Each expected is one only the change produces, since one the default branch also produces passes either way. It is something the surface shows, such as a reply, a header or a value, because a silent fallback shows no error either. The exception is a **regression** case: behaviour the change must keep, marked as one.
 
-Done when every case has all its fields, every app fact cites a source, every expected is change-only or a regression, and every criterion or behaviour-changing hunk is mapped. An app fact no source settles goes to the user before dispatch.
+Done when every case has all its fields, every app fact cites a source, every expected is change-only or a regression and names what the surface shows, and every criterion or behaviour-changing hunk is mapped. An app fact no source settles goes to the user before dispatch.
 
 ## 2. Prepare the target
 
