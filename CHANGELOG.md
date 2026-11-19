@@ -1,5 +1,15 @@
 # l0st0-skills
 
+## 1.3.0
+
+### Minor Changes
+
+- [#35](https://github.com/l0st0/skills/pull/35) [`482c6de`](https://github.com/l0st0/skills/commit/482c6dec0e8a942cc5cb636a874202cc1ef3d612) Thanks [@l0st0](https://github.com/l0st0)! - try-every-surface: a pass quotes its evidence and gets checked like a fail, and walkers reach each case through the persona's own surface. Edge cases now cover repeated, stale, concurrent and interrupted actions; behaviour the diff adds beyond the spec is reported; a change with nothing to run stops in one line.
+
+### Patch Changes
+
+- [#33](https://github.com/l0st0/skills/pull/33) [`3684656`](https://github.com/l0st0/skills/commit/3684656c98f6ab47faf6768eed293e2beee985d5) Thanks [@l0st0](https://github.com/l0st0)! - try-every-surface: every case's expected names something the surface shows (a reply, a header, a value), so a silent fallback can't pass as "no errors".
+
 ## 1.2.0
 
 ### Minor Changes
