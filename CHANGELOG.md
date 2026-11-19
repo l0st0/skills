@@ -1,5 +1,11 @@
 # l0st0-skills
 
+## 1.4.0
+
+### Minor Changes
+
+- [#36](https://github.com/l0st0/skills/pull/36) [`d7dbe88`](https://github.com/l0st0/skills/commit/d7dbe88a2b89c5a64347173a44341b90ffb18f80) Thanks [@l0st0](https://github.com/l0st0)! - try-every-surface: a change that adds or restyles something a person sees gets a look case per form factor, judged from screenshots against the planned look (the prototype, comp or mock the input points at, else the documented design system, else the nearest sibling in the app).
+
 ## 1.3.0
 
 ### Minor Changes
