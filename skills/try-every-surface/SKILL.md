@@ -22,6 +22,8 @@ Take the first input that exists:
 
 With none, ask what to test. The user's words set the scope, so a spec found on the branch supplies expecteds only for what they named.
 
+When the change alters no runtime behaviour (docs, types, tests, or config with no runtime effect; a change to app source always has some), report `Nothing to walk: <why>.` and stop.
+
 Name the **personas** the change touches, in the project's own terms: its glossary, or else the role names in its code. When it's unclear which, take every persona.
 
 Number the **cases** C1 to CN, without gaps; the IDs carry through to the report. Each case has:
@@ -33,13 +35,13 @@ Number the **cases** C1 to CN, without gaps; the IDs carry through to the report
 - **expected**
 - **covers**: the acceptance criterion or diff hunk it checks
 
-With a spec, every acceptance criterion maps to cases or is **unobservable**: no surface can show it. Without one, every diff hunk that changes behaviour maps to cases. An app-wide criterion sweeps every screen, endpoint or form factor; every other gets the cases that show it.
+With a spec, every acceptance criterion maps to cases or is **unobservable**: no surface can show it, and every behaviour-changing hunk no criterion covers is **beyond the spec**: listed for the report, left unwalked. Without one, every diff hunk that changes behaviour maps to cases. An app-wide criterion sweeps every screen, endpoint or form factor; every other gets the cases that show it.
 
-Defects cluster at the **edges**. Where the change accepts, compares or renders a value, add cases at its edges: the boundary itself and either side of it, empty, malformed, impossible (a 30 February), and markup or other characters the surface treats specially. Where the change touches code that guards access, add a regression case for who must still be refused.
+Defects cluster at the **edges**. Where the change accepts, compares or renders a value, add cases at its edges: the boundary itself and either side of it, empty, malformed, impossible (a 30 February), and markup or other characters the surface treats specially. Where it changes state, add cases that repeat the action (a double submit), act on stale state (a tab left open while the record changed elsewhere), run from two sessions at once, and stop midway (a reload, the back button). Where it changes an error path, add cases for the neighbouring errors it left alone. Where the change touches code that guards access, add a regression case for who must still be refused.
 
 The expected's claim comes from the input. Each app fact under it (a route, a param, a breakpoint, when a form validates, what a form factor hides) comes from code outside the diff, the route table or the local testing guide, and cites that source, so a wrong inference is caught by reading. Each expected is one only the change produces, since one the default branch also produces passes either way. It is something the surface shows, such as a reply, a header or a value, because a silent fallback shows no error either. The exception is a **regression** case: behaviour the change must keep, marked as one.
 
-Done when every case has all its fields, every app fact cites a source, every expected is change-only or a regression and names what the surface shows, and every criterion or behaviour-changing hunk is mapped. An app fact no source settles goes to the user before dispatch.
+Done when every case has all its fields, every app fact cites a source, every expected is change-only or a regression and names what the surface shows, and every criterion or behaviour-changing hunk is mapped or listed beyond the spec. An app fact no source settles goes to the user before dispatch.
 
 ## 2. Prepare the target
 
@@ -71,11 +73,11 @@ Surfaces:
 Data and gotchas:
 <the guide's Data, and its Gotchas for these surfaces or for every walker>
 
-Walk every case. Work in <scratchpad>/<walker name>/ and the driver session <walker name>, closing only those. Tag every record you create with <walker name>-<run id> and remove the tagged ones when done. A case whose given is absent is unreached. Fix what blocks the walk — a stale flag, a broken seed — and leave the behaviour under test as found. Observe by text — DOM, eval, response bodies, CLI output — and look at a screenshot only to judge how something looks. A defect in what a case checks fails it, even where its expected is silent; anything outside is a broken item.
+Walk every case. Work in <scratchpad>/<walker name>/ and driver sessions named <walker name>, <walker name>-2 and on, closing only those. Tag every record you create with <walker name>-<run id> and remove the tagged ones when done. A case whose given is absent is unreached. Fix what blocks the walk — a stale flag, a broken seed — and leave the behaviour under test as found. Reach each case through its surface the way its persona does, clicking what a person clicks, and observe by text — the DOM through page eval, response bodies, CLI output — looking at a screenshot only to judge how something looks. A verdict rests on what the surface showed; a test run or a call into app source shows only the code. A defect in what a case checks fails it, even where its expected is silent; anything outside is a broken item.
 
 Return under 400 words, with <REDACTED> in place of every secret. One line per case, in one of these forms:
 
-C1 — pass: <what you saw>
+C1 — pass: <what you saw>; evidence: <the lines that show it, quoted>
 C2 — fail: observed <X>, expected <Y>; steps: <…>; evidence: <the lines that show it, quoted>
 C3 — unreached: <blocker>
 
@@ -90,7 +92,7 @@ Done when every case has one **verdict**: pass, fail or unreached.
 
 ## 4. Check what came back
 
-- **Fails**: confirm each one's quoted evidence shows the observed and contradicts the expected. Walkers run on a cheaper model, and a false fail costs the user a diagnosis. Evidence that doesn't hold goes to one fresh walker; still unsettled, the case is unreached, naming what stays unclear.
+- **Evidence**: confirm each pass's quoted evidence shows the expected, and each fail's shows the observed and contradicts the expected. Walkers run on a cheaper model; a false pass ships the defect and a false fail costs the user a diagnosis. Evidence that doesn't hold goes to one fresh walker; still unsettled, the case is unreached, naming what stays unclear.
 - **Fix leads**: for each confirmed fail and broken item, read the code behind it and name where it breaks and the change that would fix it. It stays unconfirmed.
 - **Broken items**: sort each one the verdicts don't already report into one group:
   - **Caused by this change**: the change caused it or may have, and someone needs to decide on it.
@@ -99,11 +101,11 @@ Done when every case has one **verdict**: pass, fail or unreached.
 - **Guide**: fold in each environment fix that earns its place, as a new Gotchas entry or a correction to the entry it disproved, removing what the fix made obsolete. Tighten a surface's limits where walkers collided on it or left cases unwalked.
 - **Cleanup**: stop every server, worktree and driver session the run started, servers by PID or port and sessions by their own names, leaving what was already running. Another session may be running the same app beside you.
 
-Done when every fail's evidence holds, every fail and broken item has a fix lead, every broken item sits in a group, every environment fix that earns its place is in the guide, and nothing the run started still runs.
+Done when every pass's and fail's evidence holds, every fail and broken item has a fix lead, every broken item sits in a group, every environment fix that earns its place is in the guide, and nothing the run started still runs.
 
 ## 5. Report
 
-Write the details first, to `<scratchpad>/try-every-surface-<run id>.md`: per failure its observed, expected, steps a person takes to see it, evidence and fix lead; per broken item its proof and fix lead; then every walker's return. The report stays short because the details are one question away, even after the walker returns have left your context.
+Write the details first, to `<scratchpad>/try-every-surface-<run id>.md`: per failure its observed, expected, steps a person takes to see it, evidence and fix lead; per broken item its proof and fix lead; per beyond-the-spec item the hunk it comes from; then every walker's return. The report stays short because the details are one question away, even after the walker returns have left your context.
 
 Then report exactly this:
 
@@ -142,6 +144,7 @@ N cases across M personas: P pass, F fail, U unreached · B possibly broken by t
 - AC2 — C3 fail
 - AC1, AC3–AC5 pass
 - AC6 unobservable — not checked by running
+- Beyond the spec: <what the change also does, in plain words> — not walked
 
 - **Guide:** <each entry added, corrected or cut>
 - **Stopped:** <servers, sessions>
