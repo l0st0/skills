@@ -55,7 +55,7 @@ Done when the working tree, uncommitted edits included, holds the change and run
 
 Pick a **run id**, the short commit hash and the time (`a1b2c3d-1432`). Walkers tag their records with it, which keeps their data apart and lets cleanup find it. `<scratchpad>` is a directory outside the repo: your session's scratch directory if it has one, else a fresh temp directory.
 
-Group the cases by persona; cases without one go to system walkers. Cut each group into batches no larger than the tightest Surfaces limit among them, five where the guide is silent. Keep a persona's cases that change per-account state in one batch, since two walkers on one account overwrite each other.
+Group the cases by persona; cases without one go to system walkers. Cut each group into batches no larger than the tightest Surfaces limit among them, five where the guide is silent. Walkers sharing data overwrite each other, so keep a persona's cases that change per-account state in one batch, and give a case whose walk runs an irreversible write on shared data (a migration, a one-time script run with `--apply`, a backfill) its own copy of the database, made before any walker starts and named in its given (Postgres: `createdb -T <walk db> <copy>`, which fails while any session is connected to the walk db).
 
 Each batch is one walker: a fresh sub-agent one model tier below yours, when there is one. The judgement is in the cases; walking them is legwork.
 
@@ -99,9 +99,9 @@ Done when every case has one **verdict**: pass, fail or unreached.
   - **Worth knowing**: the change caused it and nothing needs deciding.
   - **Already there**: shown to predate the change, on the default branch or by `git blame` on the code behind it.
 - **Guide**: fold in each environment fix that earns its place, as a new Gotchas entry or a correction to the entry it disproved, removing what the fix made obsolete. Tighten a surface's limits where walkers collided on it or left cases unwalked.
-- **Cleanup**: stop every server, worktree and driver session the run started, servers by PID or port and sessions by their own names, leaving what was already running. Another session may be running the same app beside you.
+- **Cleanup**: stop every server, worktree and driver session the run started, servers by PID or port and sessions by their own names, and drop every database copy it made, leaving what was already running. Another session may be running the same app beside you.
 
-Done when every pass's and fail's evidence holds, every fail and broken item has a fix lead, every broken item sits in a group, every environment fix that earns its place is in the guide, and nothing the run started still runs.
+Done when every pass's and fail's evidence holds, every fail and broken item has a fix lead, every broken item sits in a group, every environment fix that earns its place is in the guide, and nothing the run started still runs or remains.
 
 ## 5. Report
 
