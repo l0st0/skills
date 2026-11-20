@@ -4,7 +4,7 @@ Every run reads the guide and every walker's brief carries its Data and Gotchas,
 
 - **Run** — how the working tree, uncommitted edits included, gets onto the target and starts there, on ports, devices or simulators, build output and app data no other session shares, so walkers and the user's own dev server never collide.
 - **Personas** — each role and how it signs in, credentials as env var names unless the literal is already committed in a seed. When agents can't read the env file, say how a walker signs in without it: an emailed code, or a disposable login with a password it sets itself.
-- **Data** — the seed or reset command, how walkers keep records apart, and every store and external service the target writes to.
+- **Data** — the seed or reset command, how walkers keep records apart, how to copy the database for a walker of its own, and every store and external service the target writes to.
 - **Surfaces** — how a walker drives and observes each, how many walkers it holds at once and, once a run has shown it, how many cases one walker gets through on it; a third-party service through a local stand-in, or else a request spy.
 - **Gotchas** — what no config confesses, each opening on the surface it bites (`**Browser**:`) unless it bites every walker, since a walker's brief carries only its own surfaces' gotchas.
 

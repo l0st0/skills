@@ -55,7 +55,7 @@ Done when the working tree, uncommitted edits included, holds the change and run
 
 Pick a **run id**, the short commit hash and the time (`a1b2c3d-1432`). Walkers tag their records with it, which keeps their data apart and lets cleanup find it. `<scratchpad>` is a directory outside the repo: your session's scratch directory if it has one, else a fresh temp directory.
 
-Group the cases by persona; cases without one go to system walkers. Cut each group into batches no larger than the tightest Surfaces limit among them, five where the guide is silent. Walkers sharing data overwrite each other, so keep a persona's cases that change per-account state in one batch, and give a case whose walk runs an irreversible write on shared data (a migration, a one-time script run with `--apply`, a backfill) its own copy of the database, made before any walker starts and named in its given (Postgres: `createdb -T <walk db> <copy>`, which fails while any session is connected to the walk db).
+Group the cases by persona; cases without one go to system walkers. Cut each group into batches no larger than the tightest Surfaces limit among them, five where the guide is silent. Walkers sharing data overwrite each other, so keep a persona's cases that change per-account state in one batch, and give a case whose walk runs an irreversible write on shared data (a migration, a one-time script run with `--apply`, a backfill) its own copy of the database, made before any walker starts the way the guide's Data says, and named in its given.
 
 Each batch is one walker: a fresh sub-agent one model tier below yours, when there is one. The judgement is in the cases; walking them is legwork.
 
