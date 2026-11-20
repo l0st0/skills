@@ -1,5 +1,15 @@
 # l0st0-skills
 
+## 1.4.1
+
+### Patch Changes
+
+- [#38](https://github.com/l0st0/skills/pull/38) [`3adb4a3`](https://github.com/l0st0/skills/commit/3adb4a38c0817149aed73d861e26bbb122fabe6b) Thanks [@l0st0](https://github.com/l0st0)! - try-every-surface: drop look cases. They judged a rough prototype's unfinished spacing and copy as the planned look, so they failed builds that were fine.
+
+- [#41](https://github.com/l0st0/skills/pull/41) [`f2ac368`](https://github.com/l0st0/skills/commit/f2ac36884b098aed3347f37c1fcf10766e7bd7b0) Thanks [@l0st0](https://github.com/l0st0)! - try-every-surface: the local testing guide's Data section now records how to copy the database for a walker of its own, and the run makes that copy the way the guide says instead of assuming Postgres.
+
+- [#40](https://github.com/l0st0/skills/pull/40) [`25f295c`](https://github.com/l0st0/skills/commit/25f295c658de28a406d7b752f47142b5b2ef5a8e) Thanks [@l0st0](https://github.com/l0st0)! - try-every-surface: a case that runs an irreversible write on shared data (a migration, an `--apply` script run, a backfill) now walks its own copy of the database, so the other walkers' cases start from the same data instead of coming back as false passes or unreached.
+
 ## 1.4.0
 
 ### Minor Changes
