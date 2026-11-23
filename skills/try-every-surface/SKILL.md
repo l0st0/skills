@@ -9,6 +9,8 @@ license: MIT
 
 The last gate after code review: the diff was read, now the built thing runs. Walkers walk the cases; the rest is yours.
 
+Every sub-agent you send for legwork, a walker or a search through the repo, runs one model tier below yours, when there is one: the judgement is in the cases, and walking and searching are legwork. While one runs, carry on with whatever doesn't need its answer.
+
 Every file you change stays uncommitted for the user to review. Commit, push, open a PR or post only on a yes that names that action; a general "ok" approves none of them. Guide edits go in a commit of their own.
 
 ## 1. Derive the cases
@@ -31,13 +33,13 @@ Number the **cases** C1 to CN, without gaps; the IDs carry through to the report
 - **persona**
 - **surface**: the one that persona uses, the app's interface for people and the API or CLI for developers. Drop to stored data, messages or logs only when the criterion is about them or nothing higher shows it.
 - **entry point** and **steps**
-- **given**: the records the case needs to show anything. A pass over missing data proves nothing.
+- **given**: the records the case needs to show anything, and how to **arrange** them. A pass over missing data proves nothing. Arrange a given the cheapest way the guide's Data names (a seed, a query, a signed command, the API), so the walker's clicks go to the steps under test: a state clicked through other screens costs the walker a turn per click.
 - **expected**
 - **covers**: the acceptance criterion or diff hunk it checks
 
 With a spec, every acceptance criterion maps to cases or is **unobservable**: no surface can show it, and every behaviour-changing hunk no criterion covers is **beyond the spec**: listed for the report, left unwalked. Without one, every diff hunk that changes behaviour maps to cases. An app-wide criterion sweeps every screen, endpoint or form factor; every other gets the cases that show it.
 
-Defects cluster at the **edges**. Where the change accepts, compares or renders a value, add cases at its edges: the boundary itself and either side of it, empty, malformed, impossible (a 30 February), and markup or other characters the surface treats specially. Where it changes state, add cases that repeat the action (a double submit), act on stale state (a tab left open while the record changed elsewhere), run from two sessions at once, and stop midway (a reload, the back button). Where it changes an error path, add cases for the neighbouring errors it left alone. Where the change touches code that guards access, add a regression case for who must still be refused.
+Defects cluster at the **edges**. Where the change accepts, compares or renders a value, add cases at its edges: the boundary itself and either side of it, empty, malformed, impossible (a 30 February), and markup or other characters the surface treats specially. Where it changes state, add cases that repeat the action (a double submit), act on stale state (a tab left open while the record changed elsewhere), run from two sessions at once, and stop midway (a reload, the back button). Where it changes an error path, add cases for the neighbouring errors it left alone. Where the change touches code that guards access, add a regression case for who must still be refused. Where it adds a screen, add a case that opens it as its persona first meets it and checks everything it shows, progress and every way on and out (back, help, log out) included, then opens it again once the flow has moved past it.
 
 The expected's claim comes from the input. Each app fact under it (a route, a param, a breakpoint, when a form validates, what a form factor hides) comes from code outside the diff, the route table or the local testing guide, and cites that source, so a wrong inference is caught by reading. Each expected is one only the change produces, since one the default branch also produces passes either way. It is something the surface shows, such as a reply, a header or a value, because a silent fallback shows no error either. The exception is a **regression** case: behaviour the change must keep, marked as one.
 
@@ -49,17 +51,17 @@ Done when every case has all its fields, every app fact cites a source, every ex
 
 The change under test stays as written. A case reachable only by changing app code, or only with a driver this machine lacks, is **unreached**, naming what it needs.
 
-Done when the working tree, uncommitted edits included, holds the change and runs on the **target**, every case's given exists, every surface the cases need answers, every persona can sign in, every store and service the target writes to is local or a stand-in, and every guide entry you read earns its place. A target writing to production stops the run for the user.
+Done when the working tree, uncommitted edits included, holds the change and runs on the **target**, every given that more than one batch starts from arranges without the surface, by a way the guide's Data names (find one and add it to Data where it names none), every surface the cases need answers, every persona can sign in, every store and service the target writes to is local or a stand-in, and every guide entry you read earns its place. A target writing to production stops the run for the user.
 
 ## 3. Dispatch the walkers
 
 Pick a **run id**, the short commit hash and the time (`a1b2c3d-1432`). Walkers tag their records with it, which keeps their data apart and lets cleanup find it. `<scratchpad>` is a directory outside the repo: your session's scratch directory if it has one, else a fresh temp directory.
 
-Group the cases by persona; cases without one go to system walkers. Cut each group into batches no larger than the tightest Surfaces limit among them, five where the guide is silent. Walkers sharing data overwrite each other, so keep a persona's cases that change per-account state in one batch, and give a case whose walk runs an irreversible write on shared data (a migration, a one-time script run with `--apply`, a backfill) its own copy of the database, made before any walker starts the way the guide's Data says, and named in its given.
+Group the cases by persona; cases without one go to system walkers. Cut each group into batches of at most four cases, fewer where a Surfaces limit among them is tighter: a walker's context grows with every case it walks, so its cost grows faster than its batch. Walkers sharing data overwrite each other, so give each batch an account of its own, arranged in its given, and order a batch so each case starts, where it can, from the state the one before it leaves. Give a case whose walk runs an irreversible write on shared data (a migration, a one-time script run with `--apply`, a backfill) its own copy of the database, made before any walker starts the way the guide's Data says, and named in its given.
 
-Each batch is one walker: a fresh sub-agent one model tier below yours, when there is one. The judgement is in the cases; walking them is legwork.
+Each batch is one walker.
 
-Open the dispatch message on `N cases across M personas, W walkers.`, then one line per case, `C1 · persona · surface — what it walks`. Givens, expecteds and sources stay in the briefs. Dispatch as many walkers at once as every surface holds, and start each queued walker as one finishes. Send each this brief, filled in and otherwise as written:
+Open the dispatch message on `N cases across M personas, W walkers.`, then one line per case, `C1 · persona · surface — what it walks`. Givens, expecteds and sources stay in the briefs. Dispatch as many walkers at once as every surface holds, and start each queued walker as one finishes. The run lasts as long as its longest **chain**, and a surface that holds one walker at a time chains its batches end to end: give those batches only the cases that need that surface, and start them first. Send each this brief, filled in and otherwise as written:
 
 ```
 You are <walker name>, walking as <persona>, signed in by <login>.
@@ -73,7 +75,7 @@ Surfaces:
 Data and gotchas:
 <the guide's Data, and its Gotchas for these surfaces or for every walker>
 
-Walk every case. Work in <scratchpad>/<walker name>/ and driver sessions named <walker name>, <walker name>-2 and on, closing only those. Tag every record you create with <walker name>-<run id> and remove the tagged ones when done. A case whose given is absent is unreached. Fix what blocks the walk — a stale flag, a broken seed — and leave the behaviour under test as found. Reach each case through its surface the way its persona does, clicking what a person clicks, and observe by text — the DOM through page eval, response bodies, CLI output — looking at a screenshot only to judge how something looks. A verdict rests on what the surface showed; a test run or a call into app source shows only the code. A defect in what a case checks fails it, even where its expected is silent; anything outside is a broken item.
+Walk every case. Work in <scratchpad>/<walker name>/ and driver sessions named <walker name>, <walker name>-2 and on, closing only those. Tag every record you create with <walker name>-<run id> and remove the tagged ones when done. Arrange each given the way its line says; a case whose given won't arrange is unreached. Fix what blocks the walk — a stale flag, a broken seed — and leave the behaviour under test as found. Reach each case through its surface the way its persona does, clicking what a person clicks, and observe by text — the DOM through page eval, response bodies, CLI output — looking at a screenshot only to judge how something looks. Read only what a verdict needs (an element's text, a row, the lines of a response that show it) and wait on what a step produces (a URL, a text, a row) rather than a fixed time: everything you read stays in your context for every later step. Take app facts from these cases, opening source only for an element or string they lack. A verdict rests on what the surface showed; a test run or a call into app source shows only the code. A defect in what a case checks fails it, even where its expected is silent; anything outside is a broken item.
 
 Return under 400 words, with <REDACTED> in place of every secret. One line per case, in one of these forms:
 
