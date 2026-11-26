@@ -1,5 +1,11 @@
 # l0st0-skills
 
+## 1.6.0
+
+### Minor Changes
+
+- [#45](https://github.com/l0st0/skills/pull/45) [`9e89922`](https://github.com/l0st0/skills/commit/9e899220bcf99178d91127223ecf4ff6a6e9f3c8) Thanks [@l0st0](https://github.com/l0st0)! - check-side-effects: other skills and the model can now call it, so a landing step can run the risk pass itself instead of asking you to type it.
+
 ## 1.5.0
 
 ### Minor Changes
