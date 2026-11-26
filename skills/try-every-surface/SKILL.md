@@ -24,9 +24,9 @@ Take the first input that exists:
 3. the branch's PR
 4. the **diff** of the branch against the default branch, uncommitted edits included
 
-Once the input shows which surfaces the change touches, start their target in the background the way step 2 says, and derive the cases while it comes up. With no input, ask what to test. The user's words set the scope, so a spec found on the branch supplies expecteds only for what they named.
+With no input, ask what to test. The user's words set the scope, so a spec found on the branch supplies expecteds only for what they named.
 
-When the change alters no runtime behaviour (docs, types, tests, or config with no runtime effect; a change to app source always has some), report `Nothing to walk: <why>.` and stop.
+When the change alters no runtime behaviour (docs, types, tests, or config with no runtime effect; a change to app source always has some), report `Nothing to walk: <why>.` and stop. Otherwise, once the input shows which surfaces the change touches, start their target in the background the way step 2 says, and derive the cases while it comes up.
 
 Name the **personas** the change touches, in the project's own terms: its glossary, or else the role names in its code. When it's unclear which, take every persona.
 
@@ -53,7 +53,7 @@ Done when every case has all its fields, every app fact cites a source, every ex
 
 The change under test stays as written. A case reachable only by changing app code, or only with a driver this machine lacks, is **unreached**, naming what it needs.
 
-Done when the working tree, uncommitted edits included, holds the change and runs on the **target**, every given that more than one batch starts from arranges without the surface, by a way the guide's Data names (find one and add it to Data where it names none), every surface the cases need answers, every persona can sign in and save its session, every store and service the target writes to is local or a stand-in, and every guide entry you read earns its place. A target writing to production stops the run for the user. These hold per batch: dispatch a batch (step 3) as soon as they hold for its cases, and prepare the rest while it walks.
+Done when the working tree, uncommitted edits included, holds the change and runs on the **target**, every given that more than one batch starts from arranges without the surface, by a way the guide's Data names (find one and add it to Data where it names none), every surface the cases need answers, every persona that signs in can sign in and save its session, every store and service the target writes to is local or a stand-in, and every guide entry you read earns its place. A target writing to production stops the run for the user. Dispatch a batch (step 3) as soon as these hold for its cases, and prepare the rest while it walks.
 
 ## 3. Dispatch the walkers
 
