@@ -9,7 +9,9 @@ license: MIT
 
 The last gate after code review: the diff was read, now the built thing runs. Walkers walk the cases; the rest is yours.
 
-Every sub-agent you send for legwork, a walker or a search through the repo, runs one model tier below yours, when there is one: the judgement is in the cases, and walking and searching are legwork. While one runs, carry on with whatever doesn't need its answer.
+Every sub-agent you send for legwork, a walker or a search through the repo, runs one model tier below yours, when there is one: the judgement is in the cases, and walking and searching are legwork.
+
+The run lasts as long as its longest **chain**, and most of that chain is your own turns, each one rereading your whole context. Work in **bursts**: the files, searches and commands one question needs go in one call. Start whatever runs long (a build, a database copy, a server boot, a walker) in the background the moment you know it's needed, and carry on with whatever doesn't need its answer while it runs.
 
 Every file you change stays uncommitted for the user to review. Commit, push, open a PR or post only on a yes that names that action; a general "ok" approves none of them. Guide edits go in a commit of their own.
 
@@ -22,9 +24,9 @@ Take the first input that exists:
 3. the branch's PR
 4. the **diff** of the branch against the default branch, uncommitted edits included
 
-With none, ask what to test. The user's words set the scope, so a spec found on the branch supplies expecteds only for what they named.
+With no input, ask what to test. The user's words set the scope, so a spec found on the branch supplies expecteds only for what they named.
 
-When the change alters no runtime behaviour (docs, types, tests, or config with no runtime effect; a change to app source always has some), report `Nothing to walk: <why>.` and stop.
+When the change alters no runtime behaviour (docs, types, tests, or config with no runtime effect; a change to app source always has some), report `Nothing to walk: <why>.` and stop. Otherwise, once the input shows which surfaces the change touches, start their target in the background the way step 2 says, and derive the cases while it comes up.
 
 Name the **personas** the change touches, in the project's own terms: its glossary, or else the role names in its code. When it's unclear which, take every persona.
 
@@ -32,8 +34,8 @@ Number the **cases** C1 to CN, without gaps; the IDs carry through to the report
 
 - **persona**
 - **surface**: the one that persona uses, the app's interface for people and the API or CLI for developers. Drop to stored data, messages or logs only when the criterion is about them or nothing higher shows it.
-- **entry point** and **steps**
-- **given**: the records the case needs to show anything, and how to **arrange** them. A pass over missing data proves nothing. Arrange a given the cheapest way the guide's Data names (a seed, a query, a signed command, the API), so the walker's clicks go to the steps under test: a state clicked through other screens costs the walker a turn per click.
+- **entry point** and **steps**, each naming what a person acts on as the surface labels it (a button's text, a field's label), so the walker finds it without opening source
+- **given**: the records the case needs to show anything, and how to **arrange** them. A pass over missing data proves nothing. Arrange a given the cheapest way the guide's Data names (a seed, a query, a signed command, the API), so the walker's clicks go to the steps under test: a state clicked through other screens costs the walker a turn per click. Time is a given too: a case about an expiry, a schedule or a rate window moves the clock the way Data names (a shifted timestamp, a shortened setting), since a walker waiting in real time holds up the whole run.
 - **expected**
 - **covers**: the acceptance criterion or diff hunk it checks
 
@@ -47,54 +49,40 @@ Done when every case has all its fields, every app fact cites a source, every ex
 
 ## 2. Prepare the target
 
-`docs/local-testing.md` records how the project runs locally for testing. A guide that outgrew one file is a `docs/local-testing/` folder: read its `README.md` index and the files the cases need. [local-testing-guide.md](local-testing-guide.md) sets the guide's sections and when an entry **earns its place**: read it before you write, prune or add to the guide. If the guide is missing, write it as that file says. If it's present, follow it, repair any fact that fails, and cut every entry that doesn't earn its place; a repair or cut that reverses a decision recorded there goes to the user first.
+`docs/local-testing.md` records how the project runs locally for testing. A guide that outgrew one file is a `docs/local-testing/` folder: read its `README.md` index and the files the cases need. [local-testing-guide.md](local-testing-guide.md) sets the guide's sections and when an entry **earns its place**: read it before you write, prune or add to the guide. If the guide is missing, write it as that file says. If it's present, follow it, repair any fact that fails, add what that file asks for and the cases need but the guide lacks, and cut every entry that doesn't earn its place; a repair or cut that reverses a decision recorded there goes to the user first.
 
 The change under test stays as written. A case reachable only by changing app code, or only with a driver this machine lacks, is **unreached**, naming what it needs.
 
-Done when the working tree, uncommitted edits included, holds the change and runs on the **target**, every given that more than one batch starts from arranges without the surface, by a way the guide's Data names (find one and add it to Data where it names none), every surface the cases need answers, every persona can sign in, every store and service the target writes to is local or a stand-in, and every guide entry you read earns its place. A target writing to production stops the run for the user.
+Done when the working tree, uncommitted edits included, holds the change and runs on the **target**, every given that more than one batch starts from arranges without the surface, by a way the guide's Data names (find one and add it to Data where it names none), every surface the cases need answers, every persona that signs in can sign in and save its session, every store and service the target writes to is local or a stand-in, and every guide entry you read earns its place. A target writing to production stops the run for the user. Dispatch a batch (step 3) as soon as these hold for its cases, and prepare the rest while it walks.
 
 ## 3. Dispatch the walkers
 
 Pick a **run id**, the short commit hash and the time (`a1b2c3d-1432`). Walkers tag their records with it, which keeps their data apart and lets cleanup find it. `<scratchpad>` is a directory outside the repo: your session's scratch directory if it has one, else a fresh temp directory.
 
-Group the cases by persona; cases without one go to system walkers. Cut each group into batches of at most four cases, fewer where a Surfaces limit among them is tighter: a walker's context grows with every case it walks, so its cost grows faster than its batch. Walkers sharing data overwrite each other, so give each batch an account of its own, arranged in its given, and order a batch so each case starts, where it can, from the state the one before it leaves. Give a case whose walk runs an irreversible write on shared data (a migration, a one-time script run with `--apply`, a backfill) its own copy of the database, made before any walker starts the way the guide's Data says, and named in its given.
+Group the cases by persona; cases without one go to system walkers. Cut each group into batches of at most four cases, fewer where a Surfaces limit among them is tighter: a walker's context grows with every case it walks, so its cost grows faster than its batch. Walkers sharing data overwrite each other, so give each batch an account of its own, arranged in its given, and order a batch so each case starts, where it can, from the state the one before it leaves. Give a case whose walk runs an irreversible write on shared data (a migration, a one-time script run with `--apply`, a backfill) its own copy of the database, made before any walker starts the way the guide's Data says, and named in its given. Sign each batch's account in once before dispatch and save its session the way the guide's Personas says, so its walker starts signed in; a case about signing in starts signed out.
 
 Each batch is one walker.
 
-Open the dispatch message on `N cases across M personas, W walkers.`, then one line per case, `C1 · persona · surface — what it walks`. Givens, expecteds and sources stay in the briefs. Dispatch as many walkers at once as every surface holds, and start each queued walker as one finishes. The run lasts as long as its longest **chain**, and a surface that holds one walker at a time chains its batches end to end: give those batches only the cases that need that surface, and start them first. Send each this brief, filled in and otherwise as written:
+Open the dispatch message on `N cases across M personas, W walkers.`, then one line per case, `C1 · persona · surface — what it walks`. Givens, expecteds and sources stay in the briefs. Dispatch as many walkers at once as every surface holds, and start each queued walker as one finishes. A surface that holds one walker at a time chains its batches end to end: give those batches only the cases that need that surface, and start them first. Give a case that waits on something no given can arrange away (a model's reply, a simulator boot, a build) a walker of its own, and start it first too. Send each this brief, filled in and otherwise as written:
 
 ```
-You are <walker name>, walking as <persona>, signed in by <login>.
+You are <walker name>, walking as <persona>, starting signed in from <the saved session and how to load it, or: signed out>. The run id is <run id>; your scratch directory is <scratchpad>/<walker name>/.
+
+Before the first case, read <the absolute path of this skill's walker.md> for how to walk and return, and <the guide files holding these cases' surfaces, its Data and its Gotchas>.
 
 Cases — entry point, given, steps, expected:
 <cases>
-
-Surfaces:
-<the guide's entries for the surfaces these cases use>
-
-Data and gotchas:
-<the guide's Data, and its Gotchas for these surfaces or for every walker>
-
-Walk every case. Work in <scratchpad>/<walker name>/ and driver sessions named <walker name>, <walker name>-2 and on, closing only those. Tag every record you create with <walker name>-<run id> and remove the tagged ones when done. Arrange each given the way its line says; a case whose given won't arrange is unreached. Fix what blocks the walk — a stale flag, a broken seed — and leave the behaviour under test as found. Reach each case through its surface the way its persona does, clicking what a person clicks, and observe by text — the DOM through page eval, response bodies, CLI output — looking at a screenshot only to judge how something looks. Read only what a verdict needs (an element's text, a row, the lines of a response that show it) and wait on what a step produces (a URL, a text, a row) rather than a fixed time: everything you read stays in your context for every later step. Take app facts from these cases, opening source only for an element or string they lack. A verdict rests on what the surface showed; a test run or a call into app source shows only the code. A defect in what a case checks fails it, even where its expected is silent; anything outside is a broken item.
-
-Return under 400 words, with <REDACTED> in place of every secret. One line per case, in one of these forms:
-
-C1 — pass: <what you saw>; evidence: <the lines that show it, quoted>
-C2 — fail: observed <X>, expected <Y>; steps: <…>; evidence: <the lines that show it, quoted>
-C3 — unreached: <blocker>
-
-Then:
-Broken items: <case — what looked broken outside the cases, or none>
-Fixes: <what was wrong → what repaired it, or none>
 ```
 
-A return counts only with one line per case in those forms. Send a batch whose return lacks them to one fresh walker; when that one's lacks them too, its cases are unreached, blocked by the walker.
+A return counts only with one line per case in the forms [walker.md](walker.md) sets. Send a batch whose return lacks them to one fresh walker; when that one's lacks them too, its cases are unreached, blocked by the walker.
 
 Done when every case has one **verdict**: pass, fail or unreached.
 
 ## 4. Check what came back
 
-- **Evidence**: confirm each pass's quoted evidence shows the expected, and each fail's shows the observed and contradicts the expected. Walkers run on a cheaper model; a false pass ships the defect and a false fail costs the user a diagnosis. Evidence that doesn't hold goes to one fresh walker; still unsettled, the case is unreached, naming what stays unclear.
+Check each walker's return as it lands, while the rest still walk.
+
+- **Evidence**: confirm each pass's quoted evidence shows the expected, and each fail's shows the observed and contradicts the expected. Walkers run on a cheaper model; a false pass ships the defect and a false fail costs the user a diagnosis. Evidence that doesn't hold goes to one fresh walker at once, before you dig into why, so it walks while you read; still unsettled, the case is unreached, naming what stays unclear.
 - **Fix leads**: for each confirmed fail and broken item, read the code behind it and name where it breaks and the change that would fix it. It stays unconfirmed.
 - **Broken items**: sort each one the verdicts don't already report into one group:
   - **Caused by this change**: the change caused it or may have, and someone needs to decide on it.
@@ -107,7 +95,7 @@ Done when every pass's and fail's evidence holds, every fail and broken item has
 
 ## 5. Report
 
-Write the details first, to `<scratchpad>/try-every-surface-<run id>.md`: per failure its observed, expected, steps a person takes to see it, evidence and fix lead; per broken item its proof and fix lead; per beyond-the-spec item the hunk it comes from; then every walker's return. The report stays short because the details are one question away, even after the walker returns have left your context.
+Write the details first, to `<scratchpad>/try-every-surface-<run id>.md`: per failure its observed, expected, steps a person takes to see it, evidence and fix lead; per broken item its proof and fix lead; per beyond-the-spec item the hunk it comes from; then the path of every walker's `return.md`. The report stays short because the details are one question away, even after the walker returns have left your context.
 
 Then report exactly this:
 
