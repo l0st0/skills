@@ -9,7 +9,9 @@ license: MIT
 
 The last gate after code review: the diff was read, now the built thing runs. Walkers walk the cases; the rest is yours.
 
-Every sub-agent you send for legwork, a walker or a search through the repo, runs one model tier below yours, when there is one: the judgement is in the cases, and walking and searching are legwork. While one runs, carry on with whatever doesn't need its answer.
+Every sub-agent you send for legwork, a walker or a search through the repo, runs one model tier below yours, when there is one: the judgement is in the cases, and walking and searching are legwork.
+
+The run lasts as long as its longest **chain**, and most of that chain is your own turns, each one rereading your whole context. Work in **bursts**: the files, searches and commands one question needs go in one call. Start whatever runs long (a build, a database copy, a server boot, a walker) in the background the moment you know it's needed, and carry on with whatever doesn't need its answer while it runs.
 
 Every file you change stays uncommitted for the user to review. Commit, push, open a PR or post only on a yes that names that action; a general "ok" approves none of them. Guide edits go in a commit of their own.
 
@@ -22,7 +24,7 @@ Take the first input that exists:
 3. the branch's PR
 4. the **diff** of the branch against the default branch, uncommitted edits included
 
-With none, ask what to test. The user's words set the scope, so a spec found on the branch supplies expecteds only for what they named.
+Once the input shows which surfaces the change touches, start their target in the background the way step 2 says, and derive the cases while it comes up. With no input, ask what to test. The user's words set the scope, so a spec found on the branch supplies expecteds only for what they named.
 
 When the change alters no runtime behaviour (docs, types, tests, or config with no runtime effect; a change to app source always has some), report `Nothing to walk: <why>.` and stop.
 
@@ -51,7 +53,7 @@ Done when every case has all its fields, every app fact cites a source, every ex
 
 The change under test stays as written. A case reachable only by changing app code, or only with a driver this machine lacks, is **unreached**, naming what it needs.
 
-Done when the working tree, uncommitted edits included, holds the change and runs on the **target**, every given that more than one batch starts from arranges without the surface, by a way the guide's Data names (find one and add it to Data where it names none), every surface the cases need answers, every persona can sign in and save its session, every store and service the target writes to is local or a stand-in, and every guide entry you read earns its place. A target writing to production stops the run for the user.
+Done when the working tree, uncommitted edits included, holds the change and runs on the **target**, every given that more than one batch starts from arranges without the surface, by a way the guide's Data names (find one and add it to Data where it names none), every surface the cases need answers, every persona can sign in and save its session, every store and service the target writes to is local or a stand-in, and every guide entry you read earns its place. A target writing to production stops the run for the user. These hold per batch: dispatch a batch (step 3) as soon as they hold for its cases, and prepare the rest while it walks.
 
 ## 3. Dispatch the walkers
 
@@ -61,34 +63,18 @@ Group the cases by persona; cases without one go to system walkers. Cut each gro
 
 Each batch is one walker.
 
-Open the dispatch message on `N cases across M personas, W walkers.`, then one line per case, `C1 · persona · surface — what it walks`. Givens, expecteds and sources stay in the briefs. Dispatch as many walkers at once as every surface holds, and start each queued walker as one finishes. The run lasts as long as its longest **chain**, and a surface that holds one walker at a time chains its batches end to end: give those batches only the cases that need that surface, and start them first. Give a case that waits on something no given can arrange away (a model's reply, a simulator boot, a build) a walker of its own, and start it first too. Send each this brief, filled in and otherwise as written:
+Open the dispatch message on `N cases across M personas, W walkers.`, then one line per case, `C1 · persona · surface — what it walks`. Givens, expecteds and sources stay in the briefs. Dispatch as many walkers at once as every surface holds, and start each queued walker as one finishes. A surface that holds one walker at a time chains its batches end to end: give those batches only the cases that need that surface, and start them first. Give a case that waits on something no given can arrange away (a model's reply, a simulator boot, a build) a walker of its own, and start it first too. Send each this brief, filled in and otherwise as written:
 
 ```
-You are <walker name>, walking as <persona>, starting signed in from <the saved session and how to load it, or: signed out>.
+You are <walker name>, walking as <persona>, starting signed in from <the saved session and how to load it, or: signed out>. The run id is <run id>; your scratch directory is <scratchpad>/<walker name>/.
+
+Before the first case, read <the absolute path of this skill's walker.md> for how to walk and return, and <the guide files holding these cases' surfaces, its Data and its Gotchas>.
 
 Cases — entry point, given, steps, expected:
 <cases>
-
-Surfaces:
-<the guide's entries for the surfaces these cases use>
-
-Data and gotchas:
-<the guide's Data, and its Gotchas for these surfaces or for every walker>
-
-Walk every case. Work in <scratchpad>/<walker name>/ and driver sessions named <walker name>, <walker name>-2 and on, closing only those. Tag every record you create with <walker name>-<run id> and remove the tagged ones when done. Arrange each given the way its line says; a case whose given won't arrange is unreached. Fix what blocks the walk — a stale flag, a broken seed — and leave the behaviour under test as found. Reach each case through its surface the way its persona does, clicking what a person clicks, and observe by text — the DOM through page eval, response bodies, CLI output — looking at a screenshot only to judge how something looks. Walk in **bursts**: the steps up to the next outcome you must read go in one call (the driver's batch, chained commands, one script), ending on a wait for what the last step produces — the surface's settle signal, a URL, a text, a row — and a read of what changed, kept to what a verdict or a broken item needs (an element's text, a row, the lines of a response that show it). Each call costs a turn that rereads your whole context; a wait on a condition returns as soon as the surface is ready, where a pause idles or races it; and everything you read stays in your context for every later step. Take app facts from these cases, opening source only for an element or string they lack. A verdict rests on what the surface showed; a test run or a call into app source shows only the code. A defect in what a case checks fails it, even where its expected is silent; anything outside is a broken item.
-
-Return under 400 words, with <REDACTED> in place of every secret. One line per case, in one of these forms:
-
-C1 — pass: <what you saw>; evidence: <the lines that show it, quoted>
-C2 — fail: observed <X>, expected <Y>; steps: <…>; evidence: <the lines that show it, quoted>
-C3 — unreached: <blocker>
-
-Then:
-Broken items: <case — what looked broken outside the cases, or none>
-Fixes: <what was wrong → what repaired it, or none>
 ```
 
-A return counts only with one line per case in those forms. Send a batch whose return lacks them to one fresh walker; when that one's lacks them too, its cases are unreached, blocked by the walker.
+A return counts only with one line per case in the forms [walker.md](walker.md) sets. Send a batch whose return lacks them to one fresh walker; when that one's lacks them too, its cases are unreached, blocked by the walker.
 
 Done when every case has one **verdict**: pass, fail or unreached.
 
@@ -96,7 +82,7 @@ Done when every case has one **verdict**: pass, fail or unreached.
 
 Check each walker's return as it lands, while the rest still walk.
 
-- **Evidence**: confirm each pass's quoted evidence shows the expected, and each fail's shows the observed and contradicts the expected. Walkers run on a cheaper model; a false pass ships the defect and a false fail costs the user a diagnosis. Evidence that doesn't hold goes to one fresh walker; still unsettled, the case is unreached, naming what stays unclear.
+- **Evidence**: confirm each pass's quoted evidence shows the expected, and each fail's shows the observed and contradicts the expected. Walkers run on a cheaper model; a false pass ships the defect and a false fail costs the user a diagnosis. Evidence that doesn't hold goes to one fresh walker at once, before you dig into why, so it walks while you read; still unsettled, the case is unreached, naming what stays unclear.
 - **Fix leads**: for each confirmed fail and broken item, read the code behind it and name where it breaks and the change that would fix it. It stays unconfirmed.
 - **Broken items**: sort each one the verdicts don't already report into one group:
   - **Caused by this change**: the change caused it or may have, and someone needs to decide on it.
@@ -109,7 +95,7 @@ Done when every pass's and fail's evidence holds, every fail and broken item has
 
 ## 5. Report
 
-Write the details first, to `<scratchpad>/try-every-surface-<run id>.md`: per failure its observed, expected, steps a person takes to see it, evidence and fix lead; per broken item its proof and fix lead; per beyond-the-spec item the hunk it comes from; then every walker's return. The report stays short because the details are one question away, even after the walker returns have left your context.
+Write the details first, to `<scratchpad>/try-every-surface-<run id>.md`: per failure its observed, expected, steps a person takes to see it, evidence and fix lead; per broken item its proof and fix lead; per beyond-the-spec item the hunk it comes from; then the path of every walker's `return.md`. The report stays short because the details are one question away, even after the walker returns have left your context.
 
 Then report exactly this:
 
