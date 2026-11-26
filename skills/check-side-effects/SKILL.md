@@ -1,7 +1,6 @@
 ---
 name: check-side-effects
-description: "Sweep a finished change for what it makes possible that nobody intended: security holes, breaking changes, slow paths, weakened checks."
-disable-model-invocation: true
+description: "Sweep a finished change for what it makes possible that nobody intended: security holes, breaking changes, slow paths, weakened checks. Use when a finished branch is about to merge, or a skill such as a landing step asks for a risk pass."
 license: MIT
 ---
 
