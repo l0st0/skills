@@ -1,5 +1,11 @@
 # l0st0-skills
 
+## 1.7.0
+
+### Minor Changes
+
+- [#44](https://github.com/l0st0/skills/pull/44) [`169296f`](https://github.com/l0st0/skills/commit/169296fb8a4b398f34f913e5225da5ec3bac0b8b) Thanks [@l0st0](https://github.com/l0st0)! - try-every-surface: runs take less time. The orchestrator works in bursts, starts builds and servers while it derives cases, dispatches each batch as soon as its own target is ready, and sends a re-check walker as soon as evidence fails. Walkers start signed in, read their fixed rules from a bundled `walker.md` instead of a long brief, walk each case in bursts that end on a condition wait, get time-based givens arranged instead of waited out, and save their returns to disk. The local testing guide now records how to save a session, move a record's time, and wait for each surface to settle.
+
 ## 1.6.0
 
 ### Minor Changes
