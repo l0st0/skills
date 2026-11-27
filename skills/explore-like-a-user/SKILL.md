@@ -1,7 +1,6 @@
 ---
 name: explore-like-a-user
-description: Explore a whole app the way first-time users would and report what is broken, confusing, visually off, inaccessible or slow, and what could be better.
-disable-model-invocation: true
+description: "Explore a whole app as real first-time users would, on a local target, on phone, desktop and keyboard, and report what is broken, confusing, visually off, inaccessible or slow, plus what could be better. Use for a UX, visual, accessibility or speed review of an app or one of its journeys, pages or personas, including a scheduled or automated pass. To check one change against its spec or diff, use try-every-surface instead."
 license: MIT
 ---
 

@@ -7,7 +7,7 @@ Four skills. Two check a change after you've written it:
 
 `explore-like-a-user` explores the whole app the way first-time users would and reports what they trip over. `prune-tests` cuts the tests that cost CI time and catch nothing.
 
-Type `/check-side-effects`, `/try-every-surface`, `/explore-like-a-user` or `/prune-tests` to run one (`$check-side-effects` and so on in Codex). All but `check-side-effects` start only when you type them; `check-side-effects` can also be called by the model or another skill, such as a step that lands a branch.
+Type `/check-side-effects`, `/try-every-surface`, `/explore-like-a-user` or `/prune-tests` to run one (`$check-side-effects` and so on in Codex). `try-every-surface` and `prune-tests` start only when you type them. `check-side-effects` can also be called by the model or another skill, such as a step that lands a branch, and `explore-like-a-user` by the model or an automation, such as a nightly review.
 
 Run `check-side-effects` and `try-every-surface` after code review. Code review checks the diff against the repo's standards and the spec. `check-side-effects` looks for what the change breaks or opens up beyond that, and `try-every-surface` runs it. Each works without the other.
 
