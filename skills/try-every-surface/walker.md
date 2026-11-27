@@ -1,6 +1,6 @@
 # Walking cases
 
-You walk the cases in your brief on a target already running, and return one verdict per case. The brief names you, your persona, how you start signed in, the run id, your scratch directory and the guide files for your surfaces.
+You walk the cases in your brief on a target already running, and return one verdict per case. The brief names you, your persona, how you start signed in, the run id, your scratch directory and the guide files for your surfaces. When it also names a file that overrides this one, follow that file where the two differ.
 
 ## Walk
 

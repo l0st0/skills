@@ -1,13 +1,13 @@
 # skills
 
-Three skills. Two check a change after you've written it:
+Four skills. Two check a change after you've written it:
 
 - `check-side-effects` reads the diff for side effects nobody intended: security holes, changes that break code still running, slow paths, weakened checks.
 - `try-every-surface` runs the app and checks that the change works everywhere it shows up: the interface, the API, the database.
 
-The third, `prune-tests`, cuts the tests that cost CI time and catch nothing.
+`explore-like-a-user` explores the whole app the way first-time users would and reports what they trip over. `prune-tests` cuts the tests that cost CI time and catch nothing.
 
-Type `/check-side-effects`, `/try-every-surface` or `/prune-tests` to run one (`$check-side-effects`, `$try-every-surface` or `$prune-tests` in Codex). `try-every-surface` and `prune-tests` start only when you type them; `check-side-effects` can also be called by the model or another skill, such as a step that lands a branch.
+Type `/check-side-effects`, `/try-every-surface`, `/explore-like-a-user` or `/prune-tests` to run one (`$check-side-effects` and so on in Codex). `try-every-surface` and `prune-tests` start only when you type them. `check-side-effects` can also be called by the model or another skill, such as a step that lands a branch. `explore-like-a-user` can also be started by the model or an automation, such as a nightly review.
 
 Run `check-side-effects` and `try-every-surface` after code review. Code review checks the diff against the repo's standards and the spec. `check-side-effects` looks for what the change breaks or opens up beyond that, and `try-every-surface` runs it. Each works without the other.
 
@@ -81,6 +81,20 @@ The first time, it sets up local testing with you:
 Every file it changes stays uncommitted. It commits, pushes, opens a PR or posts a comment only when you explicitly say yes to that step.
 
 Later runs read the guide and fix anything in it that's gone stale. When a sub-agent had to fix something that would block a run on any change, it adds that fix to the guide so the next run doesn't hit the same problem.
+
+## Explore like a user
+
+Give it a project, and optionally a focus: a journey, a page or a persona. Without one, it surveys the app, proposes 3 to 6 journeys (a persona and a goal, such as "find the next event and how to sign up"), and records them in `docs/user-journeys.md` for later runs to reuse and grow.
+
+For each journey, one sub-agent walks it on a phone, and another on a desktop and then by keyboard alone. They find their way by what the screen shows, as a newcomer would, and watch for five kinds of trouble: broken, confusing, visual, accessibility and slow. They also note what could be better.
+
+Every finding comes with the steps to see it and evidence: a screenshot for visual findings, quoted text for the rest. Each one rests on something you can check: the repo's own design source when it has one (a `DESIGN.md` or a style guide), else a named accessibility criterion, performance threshold or usability principle.
+
+Findings go in `docs/known-findings.md`, so each run reports only what is new, worse or fixed since the last one. Mark a finding accepted there and it is never reported again.
+
+It needs `try-every-surface` installed beside it, since it runs the app the way that skill does: from `docs/local-testing.md`, and only on your machine.
+
+The report groups findings by kind, most serious first, then what could be better, what got fixed, and any questions. It can run with no one watching: it saves questions that need you, such as approving the proposed journeys, for the end of the report instead of stopping to ask.
 
 ## Prune tests
 
