@@ -1,0 +1,5 @@
+interface:
+  display_name: "Explore Like a User"
+  short_description: "Explore an app as first-time users and report what they trip over"
+policy:
+  allow_implicit_invocation: false
