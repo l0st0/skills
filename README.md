@@ -7,7 +7,7 @@ Four skills. Two check a change after you've written it:
 
 `explore-like-a-user` explores the whole app the way first-time users would and reports what they trip over. `prune-tests` cuts the tests that cost CI time and catch nothing.
 
-Type `/check-side-effects`, `/try-every-surface`, `/explore-like-a-user` or `/prune-tests` to run one (`$check-side-effects` and so on in Codex). `try-every-surface` and `prune-tests` start only when you type them. `check-side-effects` can also be called by the model or another skill, such as a step that lands a branch, and `explore-like-a-user` by the model or an automation, such as a nightly review.
+Type `/check-side-effects`, `/try-every-surface`, `/explore-like-a-user` or `/prune-tests` to run one (`$check-side-effects` and so on in Codex). `try-every-surface` and `prune-tests` start only when you type them. `check-side-effects` can also be called by the model or another skill, such as a step that lands a branch. `explore-like-a-user` can also be started by the model or an automation, such as a nightly review.
 
 Run `check-side-effects` and `try-every-surface` after code review. Code review checks the diff against the repo's standards and the spec. `check-side-effects` looks for what the change breaks or opens up beyond that, and `try-every-surface` runs it. Each works without the other.
 
@@ -92,9 +92,9 @@ Every finding comes with the steps to see it and evidence: a screenshot for visu
 
 Findings go in `docs/known-findings.md`, so each run reports only what is new, worse or fixed since the last one. Mark a finding accepted there and it is never reported again.
 
-It needs `try-every-surface` installed beside it: it uses that skill's walker and its local testing guide to run the app. It runs on a local target only.
+It needs `try-every-surface` installed beside it, since it runs the app the way that skill does: from `docs/local-testing.md`, and only on your machine.
 
-The report groups findings by kind, most serious first, then what could be better, what got fixed, and any questions. It can run unattended: questions that need you, such as approving the proposed journeys, are collected for the end instead of stopping the run.
+The report groups findings by kind, most serious first, then what could be better, what got fixed, and any questions. It can run with no one watching: it saves questions that need you, such as approving the proposed journeys, for the end of the report instead of stopping to ask.
 
 ## Prune tests
 
